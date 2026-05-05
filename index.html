@@ -149,6 +149,29 @@ h1 em{color:var(--g);font-style:normal}
 .complete-text strong{color:var(--text)}
 .complete-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;background:rgba(74,184,255,.1);color:var(--b);border-radius:2px;margin-left:auto}
 
+.supp-buy-btn{
+  display:inline-block;
+  margin-top:16px;
+  padding:8px 16px;
+  background:var(--s2);
+  border:1px solid var(--border2);
+  color:var(--g);
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  text-decoration:none;
+  border-radius:3px;
+  transition:all .2s;
+  font-weight:600;
+  text-align:center;
+}
+.supp-buy-btn:hover{
+  background:var(--g);
+  color:#000;
+  border-color:var(--g);
+}
+
 /* ── TRACKER (bonus) ── */
 .tracker-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
 .tracker-card{background:var(--s1);border:1px solid var(--border);padding:24px}
@@ -781,81 +804,98 @@ h1 em{color:var(--g);font-style:normal}
   <div class="ptitle">Supplement Guide</div>
 
   <div class="supp-status">
-    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--r)">2</div><div class="supp-stat-l">Critical — Must Take</div></div>
-    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--o)">2</div><div class="supp-stat-l">Needed — Highly Recommended</div></div>
-    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--g)">1</div><div class="supp-stat-l">Performance Boost</div></div>
-    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--b)">7</div><div class="supp-stat-l">Complete From Food</div></div>
+    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--g)">6</div><div class="supp-stat-l">Core Essentials</div></div>
+    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--y)">1</div><div class="supp-stat-l">If Budget Allows</div></div>
+    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--b)">6</div><div class="supp-stat-l">Complete From Food</div></div>
   </div>
 
-  <div class="ptag">Must Take</div>
+  <div class="ptag">Section 1: Core Essentials</div>
   <div class="supp-cards" style="margin-bottom:24px">
     <div class="supp-card">
       <div>
-        <div class="supp-name">Vitamin D3 + K2</div>
-        <div class="supp-dose">2,000 IU D3 + 100 mcg K2 · With breakfast (fat meal) · Daily</div>
-        <div class="supp-why">Your diet provides only ~90 IU/day from food — target is 600 IU minimum. 15 min sunlight helps but is unreliable. Deficiency causes fatigue, poor gym performance, low immunity, and low testosterone. K2 ensures calcium goes to bones, not arteries. ~₹250–300/month.</div>
-        <div class="supp-food-src">Food provides: ~15% of requirement. Gap: 85%. Cannot be fixed by diet alone.</div>
+        <div class="supp-name">Whey Protein</div>
+        <div class="supp-dose">1 scoop (30g) · Post-workout or daily · With water/milk</div>
+        <div class="supp-why">Fast-digesting, high-quality protein to hit your 140g target easily. Essential for muscle repair after intense gym sessions. Helps keep calories low while keeping protein high.</div>
+        <a href="https://www.amazon.in/dp/B0GSZYQSVD/?coliid=IRWWPKB9T0OI1&colid=2HBIE5CZ0S97Z&psc=1&ref_=list_c_wl_gv_ov_lig_pi_dp" target="_blank" class="supp-buy-btn">Buy on Amazon</a>
       </div>
-      <span class="supp-badge critical">CRITICAL</span>
+      <span class="supp-badge critical">CORE</span>
     </div>
-    <div class="supp-card">
-      <div>
-        <div class="supp-name">Vitamin B12</div>
-        <div class="supp-dose">500 µg (methylcobalamin form) · Morning · With water · Daily</div>
-        <div class="supp-why">Your diet gives ~2.7 µg — just at the RDA. But vegetarian B12 from dairy has lower bioavailability. For gym performance, energy, nerve health, and red blood cell production, supplementing 500 µg ensures you never run deficient. Especially important since you're in a calorie deficit. ~₹150–200/month.</div>
-        <div class="supp-food-src">Food provides: ~2.7 µg (milk, curd, paneer, eggs) but low bioavailability. Supplement is insurance.</div>
-      </div>
-      <span class="supp-badge critical">CRITICAL</span>
-    </div>
-  </div>
 
-  <div class="ptag">Needed — Highly Recommended</div>
-  <div class="supp-cards" style="margin-bottom:24px">
     <div class="supp-card">
       <div>
         <div class="supp-name">Creatine Monohydrate</div>
-        <div class="supp-dose">5g · Post-Workout · With water · Daily (even rest days)</div>
-        <div class="supp-why">The single most research-backed supplement for strength and muscle development. Vegetarians have ZERO dietary creatine (it's only in meat), so your baseline is empty — you'll see bigger gains than meat-eaters when you start. Helps build strength and muscle while in a calorie deficit. Take consistently — no loading needed. ~₹400–600 for 3 months (generic/bulk). Best ROI of any supplement.</div>
-        <div class="supp-food-src">Food provides: 0 mg (creatine only in meat). Complete gap.</div>
+        <div class="supp-dose">5g · Post-Workout · With water · Daily</div>
+        <div class="supp-why">The most research-backed supplement for strength. Increases ATP production, allowing for more reps and faster muscle growth. Vital for vegetarians who get zero creatine from diet.</div>
+        <a href="https://www.amazon.in/dp/B07B6L26MG/?coliid=ICJVQ1HRBZPJ6&colid=2HBIE5CZ0S97Z&psc=1&ref_=list_c_wl_gv_ov_lig_pi_dp" target="_blank" class="supp-buy-btn">Buy on Amazon</a>
       </div>
-      <span class="supp-badge needed">NEEDED</span>
+      <span class="supp-badge critical">CORE</span>
     </div>
-    <div class="supp-card">
-      <div>
-        <div class="supp-name">Zinc</div>
-        <div class="supp-dose">15–25 mg elemental zinc · With dinner · Daily</div>
-        <div class="supp-why">Your food covers ~8 mg but target is 8–10 mg minimum. Vegetarian zinc has poor bioavailability (phytates in grains block absorption). Zinc is critical for testosterone production, immune function, and recovery. Low zinc = slow gains, low energy, poor immunity. ~₹150/month.</div>
-        <div class="supp-food-src">Food provides: ~8 mg but only ~30% absorbed from plant sources. Effective intake ~2.4 mg.</div>
-      </div>
-      <span class="supp-badge needed">NEEDED</span>
-    </div>
-  </div>
 
-  <div class="ptag">Performance Boost</div>
-  <div class="supp-cards" style="margin-bottom:32px">
     <div class="supp-card">
       <div>
         <div class="supp-name">Magnesium Glycinate</div>
         <div class="supp-dose">300 mg · Bedtime · Daily</div>
-        <div class="supp-why">Food covers ~450 mg but glycinate form at night specifically improves sleep quality, reduces cortisol, and accelerates muscle recovery. Since you sleep late (11 PM), good sleep quality is essential. Cortisol from poor sleep causes fat retention around belly — which works against your aesthetic goal. ~₹400/month.</div>
-        <div class="supp-food-src">Food provides: ~453 mg total magnesium. Supplement adds sleep-specific benefits beyond food quantity.</div>
+        <div class="supp-why">Improves sleep quality, reduces cortisol, and accelerates recovery. Essential for keeping stress levels low during a calorie deficit. Glycinate form has superior absorption.</div>
+        <a href="https://www.amazon.in/dp/B08CZ916RD/?coliid=I39C2IVKUBCVT6&colid=2HBIE5CZ0S97Z&psc=1&ref_=list_c_wl_gv_ov_lig_pi_dp" target="_blank" class="supp-buy-btn">Buy on Amazon</a>
       </div>
-      <span class="supp-badge boost">BOOST</span>
+      <span class="supp-badge critical">CORE</span>
+    </div>
+
+    <div class="supp-card">
+      <div>
+        <div class="supp-name">Zinc</div>
+        <div class="supp-dose">15–25 mg · With dinner · Daily</div>
+        <div class="supp-why">Critical for testosterone production and immune function. Plant-based diets have poor zinc absorption due to phytates. Essential for male hormonal health and recovery.</div>
+        <a href="https://www.amazon.in/dp/B0CV82H1F1/?coliid=I2B4CQAXW2SJK1&colid=2HBIE5CZ0S97Z&psc=1&ref_=list_c_wl_gv_ov_lig_pi_dp" target="_blank" class="supp-buy-btn">Buy on Amazon</a>
+      </div>
+      <span class="supp-badge critical">CORE</span>
+    </div>
+
+    <div class="supp-card">
+      <div>
+        <div class="supp-name">Vitamin B12</div>
+        <div class="supp-dose">500 µg (Methylcobalamin) · Morning · Daily</div>
+        <div class="supp-why">Ensures energy levels and nerve health. Vegetarian sources like dairy have low bioavailability. Supplementing ensures you avoid the common deficiency-linked fatigue.</div>
+        <a href="https://www.amazon.in/dp/B09DKW81VV/?coliid=I1JMVGWI45780F&colid=2HBIE5CZ0S97Z&psc=1&ref_=list_c_wl_gv_ov_lig_pi_dp" target="_blank" class="supp-buy-btn">Buy on Amazon</a>
+      </div>
+      <span class="supp-badge critical">CORE</span>
+    </div>
+
+    <div class="supp-card">
+      <div>
+        <div class="supp-name">Vitamin D3 & K2</div>
+        <div class="supp-dose">2,000 IU D3 + 100 mcg K2 · With breakfast · Daily</div>
+        <div class="supp-why">Crucial for bone health, testosterone, and immunity. Almost impossible to get enough from food. K2 ensures calcium is absorbed by bones and not deposited in arteries.</div>
+        <a href="https://www.amazon.in/dp/B0D948CKX2/?coliid=I1IYW0YF35SIE&colid=2HBIE5CZ0S97Z&psc=1&ref_=list_c_wl_gv_ov_lig_pi_dp" target="_blank" class="supp-buy-btn">Buy on Amazon</a>
+      </div>
+      <span class="supp-badge critical">CORE</span>
+    </div>
+  </div>
+
+  <div class="ptag">Section 2: If Budget Allows</div>
+  <div class="supp-cards" style="margin-bottom:32px">
+    <div class="supp-card">
+      <div>
+        <div class="supp-name">Omega-3 (Fish/Algal Oil)</div>
+        <div class="supp-dose">1000–2000 mg (EPA/DHA) · With meal · Daily</div>
+        <div class="supp-why">Reduces inflammation, improves heart health, and supports brain function. While flaxseeds provide ALA, direct EPA/DHA supplementation is superior for performance and recovery.</div>
+        <a href="https://www.amazon.in/dp/B0CXH3SNRT/?coliid=IFPS0THGQYH61&colid=2HBIE5CZ0S97Z&psc=1&ref_=list_c_wl_gv_ov_lig_pi_dp" target="_blank" class="supp-buy-btn">Buy on Amazon</a>
+      </div>
+      <span class="supp-badge needed">OPTIONAL</span>
     </div>
   </div>
 
   <div class="ptag">Complete from Food — No Supplement Needed</div>
   <div class="complete-list">
-    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Protein (143g/day)</strong> — Soya chunks, paneer (or eggs), dal, curd, milk, oats fully cover your needs</div><span class="complete-tag">COMPLETE</span></div>
-    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Calcium (1,450mg/day)</strong> — Milk, curd, paneer (or eggs), rajma, sesame cover 145% of target</div><span class="complete-tag">COMPLETE</span></div>
-    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Iron (19.7mg/day)</strong> — Dal, rajma, soya, oats, spinach cover the full target. Always pair with lemon (Vit C) for absorption.</div><span class="complete-tag">COMPLETE</span></div>
-    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Magnesium (453mg/day)</strong> — Oats, peanuts, spinach, banana, dal cover 115%+</div><span class="complete-tag">COMPLETE</span></div>
-    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Potassium (~3,000mg/day)</strong> — Banana, curd, dal, milk, sabzi provide ample potassium</div><span class="complete-tag">COMPLETE</span></div>
-    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Vitamin C (~62mg/day)</strong> — Lemon (daily), tomato, capsicum. Add 1 amla/day to easily hit 80mg+</div><span class="complete-tag">NEARLY COMPLETE</span></div>
-    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Omega-3 ALA (~1.8g/day)</strong> — Flaxseeds + walnuts provide ALA. Add 1 extra walnut to comfortably exceed 2g</div><span class="complete-tag">NEARLY COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Protein (Whole Food)</strong> — Soya chunks, paneer, dal, curd, milk, oats cover majority of needs</div><span class="complete-tag">COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Calcium</strong> — Milk, curd, paneer, rajma, sesame cover 145% of target</div><span class="complete-tag">COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Iron</strong> — Dal, rajma, soya, oats, spinach cover target. Pair with Vitamin C.</div><span class="complete-tag">COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Magnesium (Dietary)</strong> — Oats, peanuts, spinach, banana, dal cover 115%+</div><span class="complete-tag">COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Potassium</strong> — Banana, curd, dal, milk, sabzi provide ample supply</div><span class="complete-tag">COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Vitamin C</strong> — Lemon, tomato, capsicum. Easily met with daily diet.</div><span class="complete-tag">COMPLETE</span></div>
   </div>
 
-  <div class="pnote"><strong>Supplement timing:</strong> B12 + D3 → with breakfast. Creatine → post-workout. Zinc → with dinner. Magnesium → at bedtime. Keep zinc 2 hours away from calcium-rich meals for best absorption.</div>
+  <div class="pnote"><strong>Supplement timing:</strong> B12 + D3 → with breakfast. Whey + Creatine → post-workout. Zinc → with dinner. Magnesium → at bedtime. Keep zinc 2 hours away from calcium-rich meals.</div>
 </section>
 
 <!-- ═══════════════════════════════ TRACKER ═══════════════════════════════ -->
@@ -867,11 +907,16 @@ h1 em{color:var(--g);font-style:normal}
   <div class="tracker-grid">
     <!-- Water Tracker -->
     <div class="tracker-card">
-      <div class="tracker-card-title">💧 Water Intake</div>
+      <div class="tracker-card-title">💧 Water Intake (Baseline)</div>
       <div class="water-dots" id="waterDots"></div>
       <div class="water-label" id="waterLabel">0 / 3.5L (0 of 14 glasses)</div>
-      <div style="margin-top:12px;display:flex;gap:8px">
-        <button class="w-btn" onclick="resetWater()" style="background:var(--s3);color:var(--muted)">Reset</button>
+      
+      <div class="tracker-card-title" style="margin-top:24px;font-size:14px;color:var(--y)">⚡ Extra Water (if taking Creatine)</div>
+      <div class="water-dots" id="waterDotsCr"></div>
+      <div class="water-label" id="waterLabelCr">0 / 1.0L (0 of 4 glasses)</div>
+
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <button class="w-btn" onclick="resetWater()" style="background:var(--s3);color:var(--muted)">Reset All</button>
         <button class="w-btn" onclick="refillWater()">+ Fill All</button>
       </div>
     </div>
@@ -881,9 +926,11 @@ h1 em{color:var(--g);font-style:normal}
       <div class="tracker-card-title">✅ Daily Checklist</div>
       <div class="checklist-items" id="checklist">
         <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took B12 + D3 with breakfast</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Whey Protein (post-workout)</div></div>
         <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Creatine post-workout</div></div>
         <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Zinc with dinner</div></div>
         <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Magnesium at bedtime</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Omega-3 with meal</div></div>
         <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Hit protein target (140g+)</div></div>
         <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Completed gym session</div></div>
         <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">15 min morning sunlight</div></div>
@@ -1048,6 +1095,8 @@ function showEx(id,btn){
 
 // ── WATER TRACKER ──
 let waterCount = parseInt(localStorage.getItem('water')||'0');
+let waterCrCount = parseInt(localStorage.getItem('waterCr')||'0');
+
 function buildWater(){
   const c=document.getElementById('waterDots');
   c.innerHTML='';
@@ -1060,9 +1109,37 @@ function buildWater(){
   }
   document.getElementById('waterLabel').textContent=`${(waterCount*0.25).toFixed(2)}L / 3.5L (${waterCount} of 14 glasses)`;
 }
-function resetWater(){waterCount=0;localStorage.setItem('water',0);buildWater();}
-function refillWater(){waterCount=14;localStorage.setItem('water',14);buildWater();}
+
+function buildWaterCr(){
+  const c=document.getElementById('waterDotsCr');
+  if(!c) return;
+  c.innerHTML='';
+  for(let i=0;i<4;i++){
+    const d=document.createElement('div');
+    d.className='wdot'+(i<waterCrCount?' filled':'');
+    d.style.borderColor = i<waterCrCount ? 'var(--y)' : 'var(--border)';
+    d.style.background = i<waterCrCount ? 'rgba(245,212,74,0.2)' : 'var(--s2)';
+    d.textContent=i<waterCrCount?'⚡':'';
+    d.onclick=()=>{waterCrCount=i+1;localStorage.setItem('waterCr',waterCrCount);buildWaterCr()};
+    c.appendChild(d);
+  }
+  document.getElementById('waterLabelCr').textContent=`${(waterCrCount*0.25).toFixed(2)}L / 1.0L (${waterCrCount} of 4 glasses)`;
+}
+
+function resetWater(){
+  waterCount=0; localStorage.setItem('water',0);
+  waterCrCount=0; localStorage.setItem('waterCr',0);
+  buildWater(); buildWaterCr();
+}
+
+function refillWater(){
+  waterCount=14; localStorage.setItem('water',14);
+  waterCrCount=4; localStorage.setItem('waterCr',4);
+  buildWater(); buildWaterCr();
+}
+
 buildWater();
+buildWaterCr();
 
 // ── CHECKLIST ──
 function toggleCheck(el){
