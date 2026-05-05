@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Fitness Plan</title>
+
+<style>
+:root{
+  --bg:#0a0f0a;--s1:#111811;--s2:#182018;--s3:#1f281f;
+  --border:#243024;--border2:#2e3e2e;
+  --g:#7dff5f;--g2:#b8ff9a;--g3:#3a8a2a;
+  --y:#f5d44a;--o:#ff7c3a;--r:#ff4a4a;--b:#4ab8ff;--p:#c084fc;
+  --text:#dff0d8;--muted:#7a9470;--dim:#4a6044;
+  --font:'Segoe UI',system-ui,-apple-system,sans-serif;--mono:'Cascadia Code','Fira Code','Courier New',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.6;overflow-x:hidden}
+
+/* ── NOISE OVERLAY ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
+
+/* ── HERO ── */
+.hero{position:relative;padding:56px 48px 48px;border-bottom:1px solid var(--border);overflow:hidden}
+.hero-glow{position:absolute;top:-120px;right:-80px;width:500px;height:500px;background:radial-gradient(circle,rgba(125,255,95,.07) 0%,transparent 65%);pointer-events:none}
+.hero-glow2{position:absolute;bottom:-80px;left:10%;width:300px;height:300px;background:radial-gradient(circle,rgba(74,184,255,.04) 0%,transparent 65%);pointer-events:none}
+.badge{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--g);border:1px solid var(--g3);padding:4px 12px;margin-bottom:20px;animation:fadeUp .5s ease forwards}
+h1{font-family:var(--font);font-size:clamp(48px,9vw,96px);font-weight:800;line-height:.9;letter-spacing:-1px;animation:fadeUp .6s ease .1s both}
+h1 em{color:var(--g);font-style:normal}
+.hero-sub{margin-top:20px;color:var(--muted);font-size:14px;max-width:440px;animation:fadeUp .6s ease .2s both}
+.stats-row{display:flex;gap:32px;flex-wrap:wrap;margin-top:36px;animation:fadeUp .6s ease .3s both}
+.stat{display:flex;flex-direction:column}
+.stat-v{font-family:var(--font);font-size:30px;font-weight:700;color:var(--g);line-height:1}
+.stat-l{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-top:3px}
+
+/* ── NAV ── */
+.nav-wrap{position:sticky;top:0;z-index:200;background:rgba(10,15,10,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 48px}
+.nav::-webkit-scrollbar{display:none}
+.tab{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:16px 20px;color:var(--dim);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
+.tab:hover{color:var(--muted)}
+.tab.on{color:var(--g);border-bottom-color:var(--g)}
+
+/* ── PANELS ── */
+.main{max-width:980px;margin:0 auto;padding:52px 48px}
+.panel{display:none}.panel.on{display:block;animation:fadeUp .35s ease}
+
+/* ── TYPOGRAPHY ── */
+.ptag{font-family:var(--mono);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--g);margin-bottom:6px}
+.ptitle{font-family:var(--font);font-size:42px;font-weight:800;line-height:1;margin-bottom:28px}
+.pnote{border-left:2px solid var(--g3);padding:14px 20px;background:rgba(125,255,95,.04);font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:32px;border-radius:0 4px 4px 0}
+.pnote strong{color:var(--g)}
+
+/* ── GRID CARDS ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border);margin-bottom:36px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--border);border:1px solid var(--border);margin-bottom:36px}
+.card{background:var(--s1);padding:24px 26px}
+.card.span2{grid-column:1/-1}
+.card-l{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px}
+.card-v{font-family:var(--font);font-size:34px;font-weight:700;line-height:1;margin-bottom:4px}
+.card-d{font-size:12px;color:var(--muted);line-height:1.5}
+.gg{color:var(--g)}.yy{color:var(--y)}.oo{color:var(--o)}.bb{color:var(--b)}.pp{color:var(--p)}.rr{color:var(--r)}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:32px}
+.tbl th{text-align:left;padding:10px 14px;font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);background:var(--s2);border-bottom:1px solid var(--border)}
+.tbl td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:var(--s2)}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:middle;flex-shrink:0}
+
+/* ── MEAL CARDS ── */
+.meals{display:flex;flex-direction:column;gap:2px;margin-bottom:36px}
+.meal{background:var(--s1);border:1px solid var(--border);display:grid;grid-template-columns:130px 1fr;gap:0;transition:border-color .2s}
+.meal:hover{border-color:var(--border2)}
+.meal-time-col{padding:22px 20px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:flex-start}
+.meal-time{font-family:var(--mono);font-size:11px;color:var(--g);font-weight:500;line-height:1.4}
+.meal-label{font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--dim);margin-top:4px}
+.meal-body{padding:22px 24px}
+.meal-title{font-family:var(--font);font-size:16px;font-weight:700;margin-bottom:5px;color:var(--text)}
+.meal-items{font-size:12.5px;color:var(--muted);line-height:1.65;margin-bottom:12px}
+.meal-items span{color:var(--text);font-weight:500}
+.macro-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.mpill{font-family:var(--mono);font-size:10px;padding:2px 9px;border-radius:2px;letter-spacing:.5px}
+.mpill.k{background:rgba(192,132,252,.12);color:var(--p)}
+.mpill.pr{background:rgba(74,184,255,.12);color:var(--b)}
+.mpill.c{background:rgba(125,255,95,.12);color:var(--g)}
+.mpill.f{background:rgba(255,124,58,.12);color:var(--o)}
+.micro-row{display:flex;gap:6px;flex-wrap:wrap}
+.upill{font-family:var(--mono);font-size:9px;padding:2px 7px;border-radius:2px;background:rgba(255,255,255,.04);color:var(--muted);letter-spacing:.5px;border:1px solid var(--border)}
+.meal.gym-marker{background:rgba(125,255,95,.03);border-color:rgba(125,255,95,.18)}
+
+/* ── DAY SUMMARY ── */
+.day-sum{margin-top:32px}
+.day-sum-title{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.sum-tbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.sum-tbl th{text-align:left;padding:8px 12px;font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim);background:var(--s2)}
+.sum-tbl td{padding:10px 12px;border-bottom:1px solid var(--border)}
+.sum-tbl tr:last-child td{border-bottom:none}
+.ok{color:var(--g)}.warn{color:var(--y)}.bad{color:var(--o)}
+.bar-wrap{width:100px;height:6px;background:var(--s3);border-radius:3px;display:inline-block;vertical-align:middle;margin-left:8px}
+.bar-fill{height:6px;border-radius:3px;transition:width .4s}
+
+/* ── EXERCISE PANEL ── */
+.ex-day-tabs{display:flex;gap:2px;background:var(--border);border:1px solid var(--border);margin-bottom:28px;overflow-x:auto}
+.ex-tab{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:12px 20px;background:var(--s1);color:var(--dim);border:none;cursor:pointer;white-space:nowrap;transition:all .2s;flex:1;text-align:center}
+.ex-tab:hover{color:var(--muted)}
+.ex-tab.on{background:var(--s3);color:var(--g)}
+.ex-panel{display:none}.ex-panel.on{display:block}
+.ex-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+.ex-day-badge{font-family:var(--font);font-size:52px;font-weight:800;color:var(--g);line-height:1}
+.ex-day-info{}
+.ex-day-focus{font-family:var(--font);font-size:20px;font-weight:700;margin-bottom:4px}
+.ex-day-sub{font-size:12px;color:var(--muted)}
+.ex-group{margin-bottom:28px}
+.ex-group-title{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--g);padding:8px 0;border-bottom:1px solid var(--border);margin-bottom:2px}
+.ex-item{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:start;padding:14px 16px;background:var(--s1);border:1px solid var(--border);margin-top:2px;transition:border-color .2s}
+.ex-item:hover{border-color:var(--border2)}
+.ex-num{font-family:var(--mono);font-size:11px;color:var(--dim);font-weight:500;margin-top:2px}
+.ex-name{font-size:14px;font-weight:600;color:var(--text);margin-bottom:3px}
+.ex-detail{font-size:12px;color:var(--muted);line-height:1.5}
+.ex-sets{font-family:var(--mono);font-size:11px;color:var(--g);text-align:right;white-space:nowrap;font-weight:500}
+.ex-tip{font-size:11px;color:var(--dim);font-style:italic}
+.rest-day-msg{text-align:center;padding:60px 40px;border:1px solid var(--border);background:var(--s1)}
+.rest-day-msg h2{font-family:var(--font);font-size:36px;font-weight:800;color:var(--muted);margin-bottom:8px}
+.rest-day-msg p{color:var(--dim);font-size:13px;line-height:1.7;max-width:380px;margin:0 auto}
+
+/* ── SUPPLEMENTS ── */
+.supp-status{display:flex;gap:2px;background:var(--border);border:1px solid var(--border);margin-bottom:32px}
+.supp-stat-card{flex:1;background:var(--s1);padding:20px;text-align:center}
+.supp-stat-n{font-family:var(--font);font-size:36px;font-weight:800;margin-bottom:4px}
+.supp-stat-l{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+.supp-cards{display:flex;flex-direction:column;gap:2px}
+.supp-card{background:var(--s1);border:1px solid var(--border);padding:24px 28px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
+.supp-name{font-family:var(--font);font-size:18px;font-weight:700;margin-bottom:4px}
+.supp-dose{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.5px;margin-bottom:8px}
+.supp-why{font-size:12.5px;color:var(--muted);line-height:1.65}
+.supp-food-src{font-size:11px;color:var(--dim);margin-top:6px;font-style:italic}
+.supp-badge{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 10px;border-radius:2px;white-space:nowrap;align-self:flex-start}
+.supp-badge.critical{background:rgba(255,74,74,.12);color:var(--r);border:1px solid rgba(255,74,74,.25)}
+.supp-badge.needed{background:rgba(255,124,58,.12);color:var(--o);border:1px solid rgba(255,124,58,.25)}
+.supp-badge.boost{background:rgba(125,255,95,.1);color:var(--g);border:1px solid rgba(125,255,95,.2)}
+.supp-badge.optional{background:rgba(192,132,252,.1);color:var(--p);border:1px solid rgba(192,132,252,.2)}
+.supp-badge.complete{background:rgba(74,184,255,.1);color:var(--b);border:1px solid rgba(74,184,255,.2)}
+.complete-list{margin-bottom:32px}
+.complete-item{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--s1);border:1px solid var(--border);margin-bottom:2px}
+.complete-icon{font-size:14px}
+.complete-text{font-size:13px;color:var(--muted)}
+.complete-text strong{color:var(--text)}
+.complete-tag{font-family:var(--mono);font-size:9px;padding:2px 7px;background:rgba(74,184,255,.1);color:var(--b);border-radius:2px;margin-left:auto}
+
+/* ── TRACKER (bonus) ── */
+.tracker-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px}
+.tracker-card{background:var(--s1);border:1px solid var(--border);padding:24px}
+.tracker-card-title{font-family:var(--font);font-size:16px;font-weight:700;margin-bottom:16px}
+.water-dots{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.wdot{width:32px;height:32px;border-radius:50%;border:2px solid var(--border);cursor:pointer;transition:all .2s;background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:12px}
+.wdot.filled{background:var(--b);border-color:var(--b);color:#fff}
+.water-label{font-family:var(--mono);font-size:10px;color:var(--dim)}
+.checklist-items{display:flex;flex-direction:column;gap:8px}
+.check-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--s2);border-radius:3px;cursor:pointer;transition:background .2s}
+.check-item:hover{background:var(--s3)}
+.check-box{width:16px;height:16px;border:2px solid var(--border2);border-radius:2px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.check-box.done{background:var(--g);border-color:var(--g);color:#000;font-size:10px}
+.check-text{font-size:12.5px;color:var(--muted);transition:color .2s}
+.check-text.done{color:var(--dim);text-decoration:line-through}
+.weight-log{display:flex;flex-direction:column;gap:8px}
+.weight-input-row{display:flex;gap:8px}
+.weight-inp{background:var(--s2);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:13px;padding:8px 12px;border-radius:3px;width:100%;outline:none}
+.weight-inp:focus{border-color:var(--g3)}
+.w-btn{background:var(--g);color:#000;border:none;padding:8px 16px;font-family:var(--mono);font-size:10px;letter-spacing:1px;cursor:pointer;border-radius:3px;white-space:nowrap;font-weight:600;transition:opacity .2s}
+.w-btn:hover{opacity:.85}
+.weight-entries{max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.weight-entry{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;padding:6px 10px;background:var(--s2);border-radius:2px;color:var(--muted)}
+.weight-entry .w-val{color:var(--g)}
+.bmi-display{margin-top:12px;padding:14px;background:var(--s2);border-radius:3px;text-align:center}
+.bmi-val{font-family:var(--font);font-size:32px;font-weight:800;color:var(--y)}
+.bmi-label{font-family:var(--mono);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--dim)}
+
+/* ── TIPS ── */
+.tip-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--border);border:1px solid var(--border);margin-bottom:32px}
+.tip-card{background:var(--s1);padding:24px}
+.tip-card.span2{grid-column:1/-1}
+.tip-icon{font-size:22px;margin-bottom:10px}
+.tip-title{font-family:var(--font);font-size:16px;font-weight:700;margin-bottom:10px}
+.tip-list{display:flex;flex-direction:column;gap:0}
+.tip-li{font-size:12.5px;color:var(--muted);padding:7px 0;border-bottom:1px solid var(--border);line-height:1.6;padding-left:14px;position:relative}
+.tip-li:last-child{border-bottom:none}
+.tip-li::before{content:'→';position:absolute;left:0;color:var(--g3);font-size:10px;top:9px}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:720px){
+  .hero,.main{padding:36px 20px}
+  .nav{padding:0 20px}
+  .meal{grid-template-columns:1fr}
+  .meal-time-col{border-right:none;border-bottom:1px solid var(--border);padding:14px 20px}
+  .grid2,.grid4,.tracker-grid,.tip-grid{grid-template-columns:1fr}
+  .card.span2,.tip-card.span2{grid-column:1/-1}
+  .supp-card{grid-template-columns:1fr}
+  .ex-day-badge{font-size:36px}
+  h1{font-size:48px}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-glow"></div><div class="hero-glow2"></div>
+  <div class="badge">Pure Vegetarian · Gym 6×/Week · Fat Loss + Aesthetic</div>
+  <h1>My Weekly<br><em>Fitness Plan</em></h1>
+  <p class="hero-sub">5'8" · 96 kg · Sleep 11 PM–7 AM · Low budget · Built for a lean, aesthetic physique — not bulky.</p>
+  <div class="stats-row">
+    <div class="stat"><span class="stat-v">1,950</span><span class="stat-l">kcal/day (gym)</span></div>
+    <div class="stat"><span class="stat-v">~140g</span><span class="stat-l">Protein target</span></div>
+    <div class="stat"><span class="stat-v">−500</span><span class="stat-l">kcal deficit</span></div>
+    <div class="stat"><span class="stat-v">25.8</span><span class="stat-l">BMI (current)</span></div>
+    <div class="stat"><span class="stat-v">~80kg</span><span class="stat-l">Goal weight</span></div>
+  </div>
+</header>
+
+<!-- NAV -->
+<nav class="nav-wrap">
+  <div class="nav">
+    <button class="tab on" onclick="show('overview',this)">Overview</button>
+    <button class="tab" onclick="show('diet',this)">Diet (Mon–Sat)</button>
+    <button class="tab" onclick="show('sunday',this)">Sunday</button>
+    <button class="tab" onclick="show('exercise',this)">Exercise</button>
+    <button class="tab" onclick="show('supplements',this)">Supplements</button>
+    <button class="tab" onclick="show('tracker',this)">Tracker</button>
+    <button class="tab" onclick="show('tips',this)">Tips</button>
+  </div>
+</nav>
+
+<main class="main">
+
+<!-- ═══════════════════════════════ OVERVIEW ═══════════════════════════════ -->
+<section class="panel on" id="p-overview">
+  <div class="ptag">Your Numbers</div>
+  <div class="ptitle">Calorie & Macro Targets</div>
+
+  <div class="pnote"><strong>Strategy:</strong> At 96 kg / 5'8", your TDEE is ~2,450 kcal. A 500 kcal deficit = 1,950 kcal/day on gym days. High protein (140g+) protects muscle while you cut fat. All food is pure vegetarian and budget-optimised. Same diet runs Mon–Sat. Sunday is a lighter flex day (~1,700 kcal). You sleep at 11 PM and wake ~7 AM — meals are timed accordingly.</div>
+
+  <div class="grid4">
+    <div class="card"><div class="card-l">Daily Calories (Gym Days)</div><div class="card-v gg">1,950</div><div class="card-d">~500 kcal below TDEE</div></div>
+    <div class="card"><div class="card-l">Protein</div><div class="card-v bb">140–145g</div><div class="card-d">1.5g per kg body weight</div></div>
+    <div class="card"><div class="card-l">Carbohydrates</div><div class="card-v gg">195–210g</div><div class="card-d">Timed around workouts</div></div>
+    <div class="card"><div class="card-l">Fats</div><div class="card-v oo">50–58g</div><div class="card-d">Healthy fats for hormones</div></div>
+  </div>
+
+  <table class="tbl">
+    <thead><tr><th>Nutrient</th><th>Daily Target</th><th>Primary Sources</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td><span class="dot" style="background:var(--b)"></span>Protein</td><td style="font-family:var(--mono);color:var(--b)">140–145 g</td><td>Soya, paneer, curd, dal, rajma, chana, milk, oats</td><td class="ok">✓ Food covers it</td></tr>
+      <tr><td><span class="dot" style="background:var(--g)"></span>Carbs</td><td style="font-family:var(--mono);color:var(--g)">195–210 g</td><td>Oats, whole wheat roti, rice (limited), banana</td><td class="ok">✓ Food covers it</td></tr>
+      <tr><td><span class="dot" style="background:var(--o)"></span>Fats</td><td style="font-family:var(--mono);color:var(--o)">50–58 g</td><td>Peanuts, peanut butter, flaxseeds, curd, paneer</td><td class="ok">✓ Food covers it</td></tr>
+      <tr><td><span class="dot" style="background:#f59e0b"></span>Calcium</td><td style="font-family:var(--mono);color:#f59e0b">1,000 mg</td><td>Milk, curd, paneer, ragi, rajma, sesame</td><td class="ok">✓ Food covers it</td></tr>
+      <tr><td><span class="dot" style="background:var(--r)"></span>Iron</td><td style="font-family:var(--mono);color:var(--r)">17–18 mg</td><td>Dal, rajma, spinach, oats, sesame, jaggery</td><td class="warn">⚠ Partially — Supplement</td></tr>
+      <tr><td><span class="dot" style="background:#f97316"></span>Vitamin C</td><td style="font-family:var(--mono);color:#f97316">65–75 mg</td><td>Lemon, amla, tomato, capsicum, guava</td><td class="ok">✓ Food covers it</td></tr>
+      <tr><td><span class="dot" style="background:#eab308"></span>Vitamin D</td><td style="font-family:var(--mono);color:#eab308">600–800 IU</td><td>Sunlight (15 min morning) + fortified milk</td><td class="bad">✗ Supplement needed</td></tr>
+      <tr><td><span class="dot" style="background:var(--p)"></span>Vitamin B12</td><td style="font-family:var(--mono);color:var(--p)">2.4 µg</td><td>Milk, curd, paneer (insufficient for veg)</td><td class="bad">✗ Supplement needed</td></tr>
+      <tr><td><span class="dot" style="background:#06b6d4"></span>Zinc</td><td style="font-family:var(--mono);color:#06b6d4">8–10 mg</td><td>Oats, rajma, pumpkin seeds, peanuts</td><td class="warn">⚠ Borderline — Supplement</td></tr>
+      <tr><td><span class="dot" style="background:#10b981"></span>Magnesium</td><td style="font-family:var(--mono);color:#10b981">350–400 mg</td><td>Oats, spinach, peanuts, banana, dal</td><td class="ok">✓ Food covers it</td></tr>
+      <tr><td><span class="dot" style="background:#f43f5e"></span>Omega-3</td><td style="font-family:var(--mono);color:#f43f5e">ALA 2g+</td><td>Flaxseeds (1 tsp/day), walnuts</td><td class="warn">⚠ ALA only — Supplement if budget allows</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Week grid -->
+  <div class="ptag" style="margin-top:40px">Week Structure</div>
+  <div class="ptitle" style="font-size:32px">7-Day Split</div>
+  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;background:var(--border);border:1px solid var(--border);margin-bottom:32px">
+    <div style="background:var(--s1);padding:18px 10px;text-align:center;border-top:2px solid var(--g)"><div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">MON</div><div style="font-size:12px;font-weight:600;color:var(--g)">🏋️ Push</div><div style="font-family:var(--font);font-size:20px;color:var(--p)">1,950</div></div>
+    <div style="background:var(--s1);padding:18px 10px;text-align:center;border-top:2px solid var(--g)"><div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">TUE</div><div style="font-size:12px;font-weight:600;color:var(--g)">🏋️ Pull</div><div style="font-family:var(--font);font-size:20px;color:var(--p)">1,950</div></div>
+    <div style="background:var(--s1);padding:18px 10px;text-align:center;border-top:2px solid var(--g)"><div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">WED</div><div style="font-size:12px;font-weight:600;color:var(--g)">🏋️ Legs</div><div style="font-family:var(--font);font-size:20px;color:var(--p)">1,950</div></div>
+    <div style="background:var(--s1);padding:18px 10px;text-align:center;border-top:2px solid var(--g)"><div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">THU</div><div style="font-size:12px;font-weight:600;color:var(--g)">🏋️ Push+</div><div style="font-family:var(--font);font-size:20px;color:var(--p)">1,950</div></div>
+    <div style="background:var(--s1);padding:18px 10px;text-align:center;border-top:2px solid var(--g)"><div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">FRI</div><div style="font-size:12px;font-weight:600;color:var(--g)">🏋️ Pull+</div><div style="font-family:var(--font);font-size:20px;color:var(--p)">1,950</div></div>
+    <div style="background:var(--s1);padding:18px 10px;text-align:center;border-top:2px solid var(--g)"><div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">SAT</div><div style="font-size:12px;font-weight:600;color:var(--g)">🏋️ Legs+</div><div style="font-family:var(--font);font-size:20px;color:var(--p)">1,950</div></div>
+    <div style="background:var(--s1);padding:18px 10px;text-align:center;border-top:2px solid var(--dim)"><div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">SUN</div><div style="font-size:12px;font-weight:600;color:var(--muted)">🧘 Rest</div><div style="font-family:var(--font);font-size:20px;color:var(--dim)">1,700</div></div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ DIET MON–SAT ═══════════════════════════════ -->
+<section class="panel" id="p-diet">
+  <div class="ptag">Monday through Saturday — Same Every Day</div>
+  <div class="ptitle">Daily Diet Plan</div>
+  <div class="pnote"><strong>Every gym day is identical.</strong> Consistency = results. Wake-up ~7 AM, sleep 11–11:30 PM. Meals are spaced ~2.5–3 hrs apart. You workout in the evening. Protein is spread across ALL meals for maximum muscle protein synthesis.</div>
+
+  <div class="meals">
+    <!-- WAKE UP -->
+    <div class="meal">
+      <div class="meal-time-col">
+        <div class="meal-time">07:00 AM</div>
+        <div class="meal-label">Wake-Up</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-title">Morning Kickstart</div>
+        <div class="meal-items"><span>1 glass warm water</span> · <span>5 soaked almonds</span> · <span>2 walnuts</span> · <span>1 tsp soaked methi seeds</span> (regulates blood sugar, boosts metabolism)</div>
+        <div class="macro-row">
+          <span class="mpill k">~95 kcal</span>
+          <span class="mpill pr">P: 3g</span>
+          <span class="mpill c">C: 3g</span>
+          <span class="mpill f">F: 8g</span>
+        </div>
+        <div class="micro-row">
+          <span class="upill">Ca: 30mg</span>
+          <span class="upill">Mg: 20mg</span>
+          <span class="upill">Zn: 0.4mg</span>
+          <span class="upill">Fe: 0.5mg</span>
+          <span class="upill">VitE: 1.5mg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BREAKFAST -->
+    <div class="meal">
+      <div class="meal-time-col">
+        <div class="meal-time">08:00 AM</div>
+        <div class="meal-label">Breakfast</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-title">High-Protein Oats Bowl + Milk</div>
+        <div class="meal-items"><span>Oats 60g</span> · <span>Toned milk 250ml</span> · <span>1 Banana</span> · <span>1 tsp Peanut butter</span> · <span>1 tsp Flaxseeds</span> · <span>50g Paneer crumbled in</span> (cheapest way to add 9g protein)</div>
+        <div class="macro-row">
+          <span class="mpill k">~560 kcal</span>
+          <span class="mpill pr">P: 33g</span>
+          <span class="mpill c">C: 65g</span>
+          <span class="mpill f">F: 18g</span>
+        </div>
+        <div class="micro-row">
+          <span class="upill">Ca: 420mg</span>
+          <span class="upill">Fe: 3.5mg</span>
+          <span class="upill">Mg: 115mg</span>
+          <span class="upill">Zn: 1.8mg</span>
+          <span class="upill">B12: 0.8µg</span>
+          <span class="upill">VitC: 9mg</span>
+          <span class="upill">Omega3(ALA): 1.8g</span>
+          <span class="upill">K: 580mg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MID MORNING -->
+    <div class="meal">
+      <div class="meal-time-col">
+        <div class="meal-time">10:30 AM</div>
+        <div class="meal-label">Mid-Morning</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-title">Soya Chunks Chaat + Buttermilk</div>
+        <div class="meal-items"><span>Soya chunks 50g dry</span> (boiled, seasoned with lemon + black pepper + jeera) · <span>Buttermilk 250ml</span> (with roasted jeera + rock salt) · Optional: 1 tsp pumpkin seeds</div>
+        <div class="macro-row">
+          <span class="mpill k">~280 kcal</span>
+          <span class="mpill pr">P: 30g</span>
+          <span class="mpill c">C: 18g</span>
+          <span class="mpill f">F: 7g</span>
+        </div>
+        <div class="micro-row">
+          <span class="upill">Ca: 200mg</span>
+          <span class="upill">Fe: 5mg</span>
+          <span class="upill">Mg: 70mg</span>
+          <span class="upill">Zn: 1.6mg</span>
+          <span class="upill">B12: 0.3µg</span>
+          <span class="upill">VitC: 8mg (lemon)</span>
+          <span class="upill">K: 290mg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LUNCH -->
+    <div class="meal">
+      <div class="meal-time-col">
+        <div class="meal-time">01:30 PM</div>
+        <div class="meal-label">Lunch</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-title">Power Lunch — Dal + Rajma/Chana + Roti</div>
+        <div class="meal-items"><span>2 whole wheat rotis</span> · <span>1 katori Moong/Masoor dal</span> · <span>1 katori Rajma OR Chana curry</span> · <span>100g seasonal sabzi</span> (palak, methi, lauki, tinda) · <span>Large salad</span> (tomato, cucumber, carrot, onion) with lemon dressing · <span>100g low-fat curd</span></div>
+        <div class="macro-row">
+          <span class="mpill k">~480 kcal</span>
+          <span class="mpill pr">P: 30g</span>
+          <span class="mpill c">C: 68g</span>
+          <span class="mpill f">F: 7g</span>
+        </div>
+        <div class="micro-row">
+          <span class="upill">Ca: 220mg</span>
+          <span class="upill">Fe: 6.5mg</span>
+          <span class="upill">Mg: 110mg</span>
+          <span class="upill">Zn: 2.4mg</span>
+          <span class="upill">VitC: 25mg</span>
+          <span class="upill">B12: 0.3µg</span>
+          <span class="upill">Folate: 180µg</span>
+          <span class="upill">K: 820mg</span>
+          <span class="upill">Fe absorbed↑ (lemon)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRE WORKOUT -->
+    <div class="meal">
+      <div class="meal-time-col">
+        <div class="meal-time">04:00 PM</div>
+        <div class="meal-label">Pre-Workout</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-title">Pre-Workout Fuel</div>
+        <div class="meal-items"><span>1 Banana</span> · <span>2 slices whole wheat bread</span> with <span>1.5 tsp peanut butter</span> · <span>Black coffee</span> (no sugar — natural pre-workout, fat burning boost) OR 200ml toned milk if no caffeine</div>
+        <div class="macro-row">
+          <span class="mpill k">~330 kcal</span>
+          <span class="mpill pr">P: 10g</span>
+          <span class="mpill c">C: 50g</span>
+          <span class="mpill f">F: 9g</span>
+        </div>
+        <div class="micro-row">
+          <span class="upill">K: 450mg</span>
+          <span class="upill">Mg: 45mg</span>
+          <span class="upill">Fe: 1.2mg</span>
+          <span class="upill">VitB6: 0.4mg</span>
+          <span class="upill">Caffeine: ~80mg (coffee)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GYM -->
+    <div class="meal gym-marker">
+      <div class="meal-time-col">
+        <div class="meal-time" style="color:var(--g)">05:30–07:00 PM</div>
+        <div class="meal-label">Gym</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-title" style="color:var(--g)">🏋️ Gym Session</div>
+        <div class="meal-items">Sip <span>700–800ml water</span> during session. Add pinch of rock salt if sweating heavily (natural electrolytes). See Exercise tab for day-wise workouts.</div>
+      </div>
+    </div>
+
+    <!-- POST WORKOUT -->
+    <div class="meal">
+      <div class="meal-time-col">
+        <div class="meal-time">07:30 PM</div>
+        <div class="meal-label">Post-Workout</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-title">Post-Workout Protein Meal</div>
+        <div class="meal-items"><span>100g Paneer bhurji</span> (scrambled with tomato, onion, capsicum, jeera) OR <span>50g soya chunks curry</span> · <span>1 cup rice</span> (higher carbs — post workout is the BEST time for rice) · <span>1 katori Sabzi</span> · Squeeze of lemon · <span>1 tsp Creatine</span> (if taking)</div>
+        <div class="macro-row">
+          <span class="mpill k">~500 kcal</span>
+          <span class="mpill pr">P: 38g</span>
+          <span class="mpill c">C: 55g</span>
+          <span class="mpill f">F: 13g</span>
+        </div>
+        <div class="micro-row">
+          <span class="upill">Ca: 280mg</span>
+          <span class="upill">Fe: 3mg</span>
+          <span class="upill">Mg: 65mg</span>
+          <span class="upill">Zn: 1.8mg</span>
+          <span class="upill">VitC: 20mg (capsicum)</span>
+          <span class="upill">B12: 0.5µg</span>
+          <span class="upill">K: 420mg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEDTIME -->
+    <div class="meal">
+      <div class="meal-time-col">
+        <div class="meal-time">10:00 PM</div>
+        <div class="meal-label">Bedtime</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-title">Haldi Doodh (Turmeric Milk)</div>
+        <div class="meal-items"><span>250ml warm toned milk</span> · <span>½ tsp turmeric</span> · <span>Pinch of black pepper</span> (piperine boosts curcumin absorption 2000%) · Optional: tiny pinch of cinnamon. Anti-inflammatory, casein protein for overnight muscle repair, promotes sleep.</div>
+        <div class="macro-row">
+          <span class="mpill k">~140 kcal</span>
+          <span class="mpill pr">P: 9g</span>
+          <span class="mpill c">C: 13g</span>
+          <span class="mpill f">F: 4g</span>
+        </div>
+        <div class="micro-row">
+          <span class="upill">Ca: 300mg</span>
+          <span class="upill">B12: 0.8µg</span>
+          <span class="upill">Mg: 28mg</span>
+          <span class="upill">K: 360mg</span>
+          <span class="upill">Curcumin: anti-inflam</span>
+        </div>
+      </div>
+    </div>
+  </div><!-- /meals -->
+
+  <div class="day-sum">
+    <div class="day-sum-title">Daily Total — Mon to Sat</div>
+    <table class="sum-tbl">
+      <thead><tr><th>Nutrient</th><th>Target</th><th>Achieved</th><th>Coverage</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Calories</td><td>1,950 kcal</td><td>~1,985 kcal</td><td><span class="bar-wrap"><span class="bar-fill" style="width:98%;background:var(--g)"></span></span></td><td class="ok">✓ On Target</td></tr>
+        <tr><td>Protein</td><td>140–145 g</td><td>~143 g</td><td><span class="bar-wrap"><span class="bar-fill" style="width:99%;background:var(--b)"></span></span></td><td class="ok">✓ Complete</td></tr>
+        <tr><td>Carbohydrates</td><td>195–210 g</td><td>~272 g</td><td><span class="bar-wrap"><span class="bar-fill" style="width:95%;background:var(--g)"></span></span></td><td class="ok">✓ Good</td></tr>
+        <tr><td>Fats</td><td>50–58 g</td><td>~66 g</td><td><span class="bar-wrap"><span class="bar-fill" style="width:90%;background:var(--o)"></span></span></td><td class="ok">✓ Good</td></tr>
+        <tr><td>Calcium</td><td>1,000 mg</td><td>~1,450 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:#f59e0b"></span></span></td><td class="ok">✓ Complete</td></tr>
+        <tr><td>Iron</td><td>17–18 mg</td><td>~19.7 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:var(--r)"></span></span></td><td class="ok">✓ Complete from food</td></tr>
+        <tr><td>Magnesium</td><td>350–400 mg</td><td>~453 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:#10b981"></span></span></td><td class="ok">✓ Complete</td></tr>
+        <tr><td>Zinc</td><td>8–10 mg</td><td>~8.0 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:80%;background:#06b6d4"></span></span></td><td class="warn">⚠ Borderline</td></tr>
+        <tr><td>Vitamin C</td><td>65–75 mg</td><td>~62 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:88%;background:#f97316"></span></span></td><td class="warn">⚠ Add amla daily</td></tr>
+        <tr><td>Vitamin B12</td><td>2.4 µg</td><td>~2.7 µg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:var(--p)"></span></span></td><td class="ok">✓ + Supplement to be safe</td></tr>
+        <tr><td>Vitamin D</td><td>600 IU</td><td>~90 IU (food only)</td><td><span class="bar-wrap"><span class="bar-fill" style="width:15%;background:#eab308"></span></span></td><td class="bad">✗ Supplement essential</td></tr>
+        <tr><td>Omega-3</td><td>ALA 2g+</td><td>~1.8g (ALA)</td><td><span class="bar-wrap"><span class="bar-fill" style="width:90%;background:#f43f5e"></span></span></td><td class="warn">⚠ Add walnuts or algae cap</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ SUNDAY ═══════════════════════════════ -->
+<section class="panel" id="p-sunday">
+  <div class="ptag">Sunday — Rest Day</div>
+  <div class="ptitle">Light Recovery Day</div>
+  <div class="pnote"><strong>No gym.</strong> Calories drop to ~1,700 kcal. Lower carbs since no workout fuel needed. Protein stays high (120g+) to prevent muscle loss even on rest days. This is also your meal prep day — cook dal, curd, and soak chana/rajma for the week.</div>
+
+  <div class="meals">
+    <div class="meal">
+      <div class="meal-time-col"><div class="meal-time">08:30 AM</div><div class="meal-label">Breakfast</div></div>
+      <div class="meal-body">
+        <div class="meal-title">Besan Chilla + Curd + Warm Lemon Water</div>
+        <div class="meal-items"><span>2 Besan chilla</span> (75g besan, onion, tomato, green chilli, coriander) · <span>150g curd</span> with cucumber · <span>1 glass warm lemon water</span> (juice of ½ lemon, no sugar — boosts Vit C + aids digestion)</div>
+        <div class="macro-row"><span class="mpill k">~420 kcal</span><span class="mpill pr">P: 26g</span><span class="mpill c">C: 48g</span><span class="mpill f">F: 11g</span></div>
+        <div class="micro-row"><span class="upill">Ca: 250mg</span><span class="upill">Fe: 3mg</span><span class="upill">Mg: 70mg</span><span class="upill">Zn: 1.5mg</span><span class="upill">B12: 0.3µg</span></div>
+      </div>
+    </div>
+    <div class="meal">
+      <div class="meal-time-col"><div class="meal-time">11:00 AM</div><div class="meal-label">Mid-Morning</div></div>
+      <div class="meal-body">
+        <div class="meal-title">Paneer Salad</div>
+        <div class="meal-items"><span>80g paneer cubes</span> (raw or lightly grilled with jeera) · <span>Cucumber, tomato, onion, carrot</span> · <span>Lemon juice + black pepper</span> · 5 almonds on side</div>
+        <div class="macro-row"><span class="mpill k">~230 kcal</span><span class="mpill pr">P: 20g</span><span class="mpill c">C: 7g</span><span class="mpill f">F: 14g</span></div>
+        <div class="micro-row"><span class="upill">Ca: 280mg</span><span class="upill">VitC: 15mg</span><span class="upill">Fe: 1mg</span><span class="upill">B12: 0.4µg</span></div>
+      </div>
+    </div>
+    <div class="meal">
+      <div class="meal-time-col"><div class="meal-time">01:30 PM</div><div class="meal-label">Lunch</div></div>
+      <div class="meal-body">
+        <div class="meal-title">Rajma/Chole + 2 Rotis (Flex Meal)</div>
+        <div class="meal-items"><span>2–3 rotis</span> (you can have one extra today) · <span>Rajma OR Chole curry</span> (home-cooked) · <span>100g curd</span> · <span>Salad</span> · Optional: ½ cup rice if craving. One Sunday comfort meal is fine for mental sustainability.</div>
+        <div class="macro-row"><span class="mpill k">~530 kcal</span><span class="mpill pr">P: 28g</span><span class="mpill c">C: 78g</span><span class="mpill f">F: 9g</span></div>
+        <div class="micro-row"><span class="upill">Ca: 200mg</span><span class="upill">Fe: 5.5mg</span><span class="upill">Mg: 100mg</span><span class="upill">Zn: 2.2mg</span><span class="upill">Folate: 160µg</span></div>
+      </div>
+    </div>
+    <div class="meal">
+      <div class="meal-time-col"><div class="meal-time">04:30 PM</div><div class="meal-label">Snack</div></div>
+      <div class="meal-body">
+        <div class="meal-title">Roasted Makhana + Milk</div>
+        <div class="meal-items"><span>30g roasted makhana</span> (fox nuts, rock salt + pepper) · <span>200ml toned milk</span>. Light, filling, zero cooking, rich in minerals.</div>
+        <div class="macro-row"><span class="mpill k">~200 kcal</span><span class="mpill pr">P: 10g</span><span class="mpill c">C: 24g</span><span class="mpill f">F: 5g</span></div>
+        <div class="micro-row"><span class="upill">Ca: 280mg</span><span class="upill">Mg: 30mg</span><span class="upill">Fe: 0.8mg</span><span class="upill">B12: 0.5µg</span></div>
+      </div>
+    </div>
+    <div class="meal">
+      <div class="meal-time-col"><div class="meal-time">07:30 PM</div><div class="meal-label">Dinner</div></div>
+      <div class="meal-body">
+        <div class="meal-title">Light Soya Keema / Dal + Roti</div>
+        <div class="meal-items"><span>50g soya granules keema</span> (with peas, tomato, garam masala) + <span>1–2 rotis</span> OR <span>Moong dal</span> (light) + <span>1 roti</span> · <span>Sabzi</span> · <span>100g curd</span></div>
+        <div class="macro-row"><span class="mpill k">~360 kcal</span><span class="mpill pr">P: 30g</span><span class="mpill c">C: 42g</span><span class="mpill f">F: 8g</span></div>
+        <div class="micro-row"><span class="upill">Ca: 160mg</span><span class="upill">Fe: 5mg</span><span class="upill">Mg: 75mg</span><span class="upill">Zn: 1.6mg</span></div>
+      </div>
+    </div>
+    <div class="meal">
+      <div class="meal-time-col"><div class="meal-time">10:00 PM</div><div class="meal-label">Bedtime</div></div>
+      <div class="meal-body">
+        <div class="meal-title">Haldi Doodh</div>
+        <div class="meal-items"><span>250ml warm toned milk</span> · <span>½ tsp turmeric</span> · <span>Pinch black pepper</span></div>
+        <div class="macro-row"><span class="mpill k">~140 kcal</span><span class="mpill pr">P: 9g</span><span class="mpill c">C: 13g</span><span class="mpill f">F: 4g</span></div>
+        <div class="micro-row"><span class="upill">Ca: 300mg</span><span class="upill">B12: 0.8µg</span><span class="upill">Mg: 28mg</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="day-sum">
+    <div class="day-sum-title">Sunday Total</div>
+    <table class="sum-tbl">
+      <thead><tr><th>Nutrient</th><th>Target</th><th>Achieved</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Calories</td><td>~1,700 kcal</td><td>~1,880 kcal</td><td class="ok">✓ Slight flex — fine</td></tr>
+        <tr><td>Protein</td><td>120g+</td><td>~123g</td><td class="ok">✓ Complete</td></tr>
+        <tr><td>Carbs</td><td>160–180g</td><td>~212g</td><td class="warn">⚠ Slightly high but rest day buffer</td></tr>
+        <tr><td>Calcium</td><td>1,000mg</td><td>~1,470mg</td><td class="ok">✓ Complete</td></tr>
+        <tr><td>Iron</td><td>17–18mg</td><td>~15.3mg</td><td class="warn">⚠ Slightly under — eat amla</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ EXERCISE ═══════════════════════════════ -->
+<section class="panel" id="p-exercise">
+  <div class="ptag">6-Day Push / Pull / Legs Split</div>
+  <div class="ptitle">Weekly Exercise Plan</div>
+  <div class="pnote"><strong>Push/Pull/Legs × 2</strong> — the best split for aesthetics. You hit each muscle group twice per week. Mon/Thu = Push (chest, shoulders, triceps), Tue/Fri = Pull (back, biceps), Wed/Sat = Legs + Core. Sets × Reps listed — choose your own weight. Focus on <strong>progressive overload</strong>: try to add a little weight or one extra rep each week.</div>
+
+  <div class="ex-day-tabs">
+    <button class="ex-tab on" onclick="showEx('mon',this)">MON — Push</button>
+    <button class="ex-tab" onclick="showEx('tue',this)">TUE — Pull</button>
+    <button class="ex-tab" onclick="showEx('wed',this)">WED — Legs</button>
+    <button class="ex-tab" onclick="showEx('thu',this)">THU — Push+</button>
+    <button class="ex-tab" onclick="showEx('fri',this)">FRI — Pull+</button>
+    <button class="ex-tab" onclick="showEx('sat',this)">SAT — Legs+</button>
+    <button class="ex-tab" onclick="showEx('sun',this)">SUN — Rest</button>
+  </div>
+
+  <!-- MON -->
+  <div class="ex-panel on" id="ex-mon">
+    <div class="ex-header">
+      <div class="ex-day-badge">MON</div>
+      <div class="ex-day-info">
+        <div class="ex-day-focus">Push Day — Chest · Shoulders · Triceps</div>
+        <div class="ex-day-sub">~60–70 min · Focus on chest width + shoulder caps for V-taper aesthetic</div>
+      </div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Chest — Primary</div>
+      <div class="ex-item"><div class="ex-num">01</div><div><div class="ex-name">Flat Barbell / Dumbbell Bench Press</div><div class="ex-detail">Compound movement. Full range of motion. Chest should touch bar path. Control the descent (2 sec down).</div></div><div class="ex-sets">4 × 8–10</div></div>
+      <div class="ex-item"><div class="ex-num">02</div><div><div class="ex-name">Incline Dumbbell Press</div><div class="ex-detail">30–45° incline. Targets upper chest — crucial for aesthetic chest fullness.</div></div><div class="ex-sets">3 × 10–12</div></div>
+      <div class="ex-item"><div class="ex-num">03</div><div><div class="ex-name">Cable Chest Fly / Pec Deck</div><div class="ex-detail">Isolation. Squeeze at the top. Don't go too heavy — feel the stretch and contraction.</div></div><div class="ex-sets">3 × 12–15</div></div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Shoulders — Secondary</div>
+      <div class="ex-item"><div class="ex-num">04</div><div><div class="ex-name">Overhead Dumbbell Press</div><div class="ex-detail">Seated or standing. Full ROM. Key for shoulder width = aesthetic V-taper.</div></div><div class="ex-sets">4 × 10–12</div></div>
+      <div class="ex-item"><div class="ex-num">05</div><div><div class="ex-name">Lateral Raises</div><div class="ex-detail">MOST IMPORTANT for aesthetics. Go light, raise slowly, hold 1 sec at top. Never cheat.</div></div><div class="ex-sets">4 × 15–20</div></div>
+      <div class="ex-item"><div class="ex-num">06</div><div><div class="ex-name">Front Raise (Alternate)</div><div class="ex-detail">Keep arms slight bend. Control the movement. Avoid momentum.</div></div><div class="ex-sets">2 × 12</div></div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Triceps — Finisher</div>
+      <div class="ex-item"><div class="ex-num">07</div><div><div class="ex-name">Tricep Rope Pushdown</div><div class="ex-detail">Elbows locked at sides. Spread rope at bottom. Full extension.</div></div><div class="ex-sets">3 × 12–15</div></div>
+      <div class="ex-item"><div class="ex-num">08</div><div><div class="ex-name">Overhead Tricep Extension (Cable/DB)</div><div class="ex-detail">Long head emphasis. Key for the horseshoe look. Full stretch overhead.</div></div><div class="ex-sets">3 × 12</div></div>
+    </div>
+  </div>
+
+  <!-- TUE -->
+  <div class="ex-panel" id="ex-tue">
+    <div class="ex-header">
+      <div class="ex-day-badge">TUE</div>
+      <div class="ex-day-info">
+        <div class="ex-day-focus">Pull Day — Back · Biceps · Rear Delts</div>
+        <div class="ex-day-sub">~60–70 min · Wide back = V-taper. Prioritise lat width over thickness today.</div>
+      </div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Back — Primary</div>
+      <div class="ex-item"><div class="ex-num">01</div><div><div class="ex-name">Pull-Ups / Lat Pulldown</div><div class="ex-detail">Pull-ups if you can do 6+. Otherwise lat pulldown. Wide grip. Pull to upper chest. #1 exercise for lat width.</div></div><div class="ex-sets">4 × 8–12</div></div>
+      <div class="ex-item"><div class="ex-num">02</div><div><div class="ex-name">Seated Cable Row</div><div class="ex-detail">Neutral grip. Pull to lower chest. Squeeze shoulder blades at the end. Don't lean back excessively.</div></div><div class="ex-sets">3 × 10–12</div></div>
+      <div class="ex-item"><div class="ex-num">03</div><div><div class="ex-name">Single-Arm Dumbbell Row</div><div class="ex-detail">Full stretch at bottom, full contraction at top. Elbow drives the movement, not the hand.</div></div><div class="ex-sets">3 × 10 each</div></div>
+      <div class="ex-item"><div class="ex-num">04</div><div><div class="ex-name">Straight-Arm Cable Pulldown</div><div class="ex-detail">Isolation for lats. Arms straight, pull bar to thighs. Great for lat definition.</div></div><div class="ex-sets">3 × 15</div></div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Rear Delts</div>
+      <div class="ex-item"><div class="ex-num">05</div><div><div class="ex-name">Reverse Pec Deck / Face Pulls</div><div class="ex-detail">Face pulls with rope at eye height. Externally rotate at top. Critical for shoulder health + rear delt aesthetics.</div></div><div class="ex-sets">3 × 15–20</div></div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Biceps — Finisher</div>
+      <div class="ex-item"><div class="ex-num">06</div><div><div class="ex-name">Barbell / EZ-Bar Curl</div><div class="ex-detail">Supinate wrist at top. Control the negative (3 sec down). Don't swing.</div></div><div class="ex-sets">3 × 10–12</div></div>
+      <div class="ex-item"><div class="ex-num">07</div><div><div class="ex-name">Incline Dumbbell Curl</div><div class="ex-detail">Long head stretch. Bench at ~60°. Arms hang freely. Best exercise for peak bicep.</div></div><div class="ex-sets">3 × 12</div></div>
+      <div class="ex-item"><div class="ex-num">08</div><div><div class="ex-name">Hammer Curl</div><div class="ex-detail">Neutral grip. Works brachialis (arm thickness + pushes bicep up).</div></div><div class="ex-sets">2 × 12</div></div>
+    </div>
+  </div>
+
+  <!-- WED -->
+  <div class="ex-panel" id="ex-wed">
+    <div class="ex-header">
+      <div class="ex-day-badge">WED</div>
+      <div class="ex-day-info">
+        <div class="ex-day-focus">Legs Day + Core — Quads · Hamstrings · Glutes · Calves</div>
+        <div class="ex-day-sub">~65–75 min · Don't skip legs. Big leg muscles = massive calorie burn = faster fat loss.</div>
+      </div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Legs — Primary</div>
+      <div class="ex-item"><div class="ex-num">01</div><div><div class="ex-name">Barbell Squat / Goblet Squat</div><div class="ex-detail">King of all exercises. Below parallel. Chest up. Knees track toes. Biggest compound movement.</div></div><div class="ex-sets">4 × 8–10</div></div>
+      <div class="ex-item"><div class="ex-num">02</div><div><div class="ex-name">Leg Press</div><div class="ex-detail">Feet at shoulder width, mid-platform. Don't lock knees at top. Full ROM.</div></div><div class="ex-sets">3 × 12–15</div></div>
+      <div class="ex-item"><div class="ex-num">03</div><div><div class="ex-name">Romanian Deadlift (RDL)</div><div class="ex-detail">Hinge at hips. Bar stays close. Feel hamstring stretch. Great for glute-ham tie-in aesthetics.</div></div><div class="ex-sets">3 × 10–12</div></div>
+      <div class="ex-item"><div class="ex-num">04</div><div><div class="ex-name">Leg Curl (Machine)</div><div class="ex-detail">Hamstring isolation. Full ROM. Control the negative. Do not rush.</div></div><div class="ex-sets">3 × 12</div></div>
+      <div class="ex-item"><div class="ex-num">05</div><div><div class="ex-name">Leg Extension (Machine)</div><div class="ex-detail">Quad isolation. Hold 1 sec at top. Light to moderate weight.</div></div><div class="ex-sets">3 × 15</div></div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Calves</div>
+      <div class="ex-item"><div class="ex-num">06</div><div><div class="ex-name">Standing Calf Raise</div><div class="ex-detail">Full stretch at bottom, full contraction at top. Slow and controlled. Don't bounce.</div></div><div class="ex-sets">4 × 20</div></div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Core — Finisher</div>
+      <div class="ex-item"><div class="ex-num">07</div><div><div class="ex-name">Hanging Leg Raise / Lying Leg Raise</div><div class="ex-detail">Lower abs. Control the descent. Don't swing. Posterior pelvic tilt at top.</div></div><div class="ex-sets">3 × 15</div></div>
+      <div class="ex-item"><div class="ex-num">08</div><div><div class="ex-name">Cable Crunch / Crunch</div><div class="ex-detail">Upper abs. Round the spine, don't pull neck. Squeeze hard at bottom.</div></div><div class="ex-sets">3 × 15–20</div></div>
+      <div class="ex-item"><div class="ex-num">09</div><div><div class="ex-name">Plank</div><div class="ex-detail">Neutral spine. Core braced. Don't let hips sag or rise. Breathe steadily.</div></div><div class="ex-sets">3 × 45 sec</div></div>
+    </div>
+  </div>
+
+  <!-- THU -->
+  <div class="ex-panel" id="ex-thu">
+    <div class="ex-header">
+      <div class="ex-day-badge">THU</div>
+      <div class="ex-day-info">
+        <div class="ex-day-focus">Push Day 2 — Chest Focus + Shoulders + Triceps</div>
+        <div class="ex-day-sub">~60 min · Slightly different exercises from Monday. Same muscles, fresh angles.</div>
+      </div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Chest — Primary (Different Angles)</div>
+      <div class="ex-item"><div class="ex-num">01</div><div><div class="ex-name">Incline Barbell Press</div><div class="ex-detail">Swap from flat on Mon. Upper chest dominant. Grip slightly narrower than bench.</div></div><div class="ex-sets">4 × 8–10</div></div>
+      <div class="ex-item"><div class="ex-num">02</div><div><div class="ex-name">Flat Dumbbell Press</div><div class="ex-detail">Greater ROM than barbell. Feel the full stretch. Dumbbells touch at top (don't slam).</div></div><div class="ex-sets">3 × 10–12</div></div>
+      <div class="ex-item"><div class="ex-num">03</div><div><div class="ex-name">Low-to-High Cable Fly</div><div class="ex-detail">Targets upper chest from below. Aesthetically builds the chest shelf. Squeeze hard.</div></div><div class="ex-sets">3 × 12–15</div></div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Shoulders — Arnold Press + Isolation</div>
+      <div class="ex-item"><div class="ex-num">04</div><div><div class="ex-name">Arnold Dumbbell Press</div><div class="ex-detail">Rotate from palms-in to palms-out as you press. Hits all 3 delt heads. Classic aesthetic move.</div></div><div class="ex-sets">3 × 10–12</div></div>
+      <div class="ex-item"><div class="ex-num">05</div><div><div class="ex-name">Lateral Raises (Cable)</div><div class="ex-detail">Cable keeps tension at bottom unlike dumbbells. Single arm. Slow and controlled.</div></div><div class="ex-sets">3 × 15–20 each</div></div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Triceps</div>
+      <div class="ex-item"><div class="ex-num">06</div><div><div class="ex-name">Skull Crushers (EZ Bar / DB)</div><div class="ex-detail">Elbows fixed. Lower bar to forehead. Don't flare elbows. Great long head activation.</div></div><div class="ex-sets">3 × 10–12</div></div>
+      <div class="ex-item"><div class="ex-num">07</div><div><div class="ex-name">Close-Grip Bench Press</div><div class="ex-detail">Hands shoulder width. Elbows tucked. Tricep dominant bench variation.</div></div><div class="ex-sets">3 × 10</div></div>
+      <div class="ex-item"><div class="ex-num">08</div><div><div class="ex-name">Diamond Push-Ups (Finisher)</div><div class="ex-detail">Bodyweight. Go to failure. Hands form diamond shape. Don't rush — feel the burn.</div></div><div class="ex-sets">2 × Failure</div></div>
+    </div>
+  </div>
+
+  <!-- FRI -->
+  <div class="ex-panel" id="ex-fri">
+    <div class="ex-header">
+      <div class="ex-day-badge">FRI</div>
+      <div class="ex-day-info">
+        <div class="ex-day-focus">Pull Day 2 — Back Thickness + Biceps Peak</div>
+        <div class="ex-day-sub">~60 min · Focus on back thickness and bicep peak today vs Tuesday's width focus.</div>
+      </div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Back — Thickness Focus</div>
+      <div class="ex-item"><div class="ex-num">01</div><div><div class="ex-name">Deadlift (Conventional)</div><div class="ex-detail">King of compound lifts. Full body. Flat back, bar close to body, drive through heels. Best overall mass builder.</div></div><div class="ex-sets">4 × 5–6</div></div>
+      <div class="ex-item"><div class="ex-num">02</div><div><div class="ex-name">Bent-Over Barbell Row</div><div class="ex-detail">Overhand grip. Hinge ~45°. Pull to lower chest. Squeeze scapulas. Controlled eccentric.</div></div><div class="ex-sets">3 × 8–10</div></div>
+      <div class="ex-item"><div class="ex-num">03</div><div><div class="ex-name">Chest-Supported T-Bar Row / Machine Row</div><div class="ex-detail">Chest support eliminates cheating. Pure back contraction. Focus on mind-muscle connection.</div></div><div class="ex-sets">3 × 10–12</div></div>
+      <div class="ex-item"><div class="ex-num">04</div><div><div class="ex-name">Lat Pulldown (Close Grip)</div><div class="ex-detail">Different from Tuesday's wide grip. Neutral handle. Targets mid-lat and lower lat.</div></div><div class="ex-sets">3 × 12</div></div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Biceps — Peak Focus</div>
+      <div class="ex-item"><div class="ex-num">05</div><div><div class="ex-name">Concentration Curl</div><div class="ex-detail">Best exercise for bicep peak. Single arm, elbow on inner thigh. Supinate fully at top.</div></div><div class="ex-sets">3 × 12 each</div></div>
+      <div class="ex-item"><div class="ex-num">06</div><div><div class="ex-name">Cable Curl (Supinated)</div><div class="ex-detail">Constant tension throughout. Squeeze hard at top. Slow negative (3 sec).</div></div><div class="ex-sets">3 × 15</div></div>
+      <div class="ex-item"><div class="ex-num">07</div><div><div class="ex-name">21s (Barbell Curl)</div><div class="ex-detail">7 reps lower half · 7 reps upper half · 7 reps full range. Intense pump. Go light.</div></div><div class="ex-sets">2 × 21</div></div>
+    </div>
+  </div>
+
+  <!-- SAT -->
+  <div class="ex-panel" id="ex-sat">
+    <div class="ex-header">
+      <div class="ex-day-badge">SAT</div>
+      <div class="ex-day-info">
+        <div class="ex-day-focus">Legs Day 2 + Core — Glute Focus + HIIT Finisher</div>
+        <div class="ex-day-sub">~70 min · Glute & hamstring emphasis today. Finish with 10 min HIIT for max fat burn.</div>
+      </div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Glute & Hamstring Focus</div>
+      <div class="ex-item"><div class="ex-num">01</div><div><div class="ex-name">Bulgarian Split Squat</div><div class="ex-detail">Back foot elevated. Deep lunge. Glute-dominant. One of the best single-leg exercises for aesthetics.</div></div><div class="ex-sets">3 × 10 each</div></div>
+      <div class="ex-item"><div class="ex-num">02</div><div><div class="ex-name">Hip Thrust (Barbell)</div><div class="ex-detail">Shoulder on bench, bar on hip crease. Drive through heels. Squeeze glutes hard at top. Best glute builder.</div></div><div class="ex-sets">4 × 12</div></div>
+      <div class="ex-item"><div class="ex-num">03</div><div><div class="ex-name">Sumo Deadlift</div><div class="ex-detail">Wide stance. Toes out. Hits inner thighs and glutes differently from conventional. Control descent.</div></div><div class="ex-sets">3 × 10</div></div>
+      <div class="ex-item"><div class="ex-num">04</div><div><div class="ex-name">Walking Lunges</div><div class="ex-detail">Dumbbells in hand. Big stride. Front knee doesn't pass toe. Hit the gym floor or outdoor.</div></div><div class="ex-sets">3 × 20 steps</div></div>
+      <div class="ex-item"><div class="ex-num">05</div><div><div class="ex-name">Seated Leg Curl</div><div class="ex-detail">Hamstring finisher. Full ROM. Slow negative (3 sec down). Don't cheat.</div></div><div class="ex-sets">3 × 15</div></div>
+    </div>
+    <div class="ex-group">
+      <div class="ex-group-title">Core + HIIT Finisher</div>
+      <div class="ex-item"><div class="ex-num">06</div><div><div class="ex-name">Russian Twists</div><div class="ex-detail">Obliques. Feet off floor. Twist fully side to side. Hold med ball or plate for resistance.</div></div><div class="ex-sets">3 × 20</div></div>
+      <div class="ex-item"><div class="ex-num">07</div><div><div class="ex-name">Hollow Body Hold</div><div class="ex-detail">Lower back pressed to floor. Arms overhead. Hold. Best core stability exercise.</div></div><div class="ex-sets">3 × 30 sec</div></div>
+      <div class="ex-item"><div class="ex-num">08</div><div><div class="ex-name">HIIT: Treadmill Sprints / Jump Rope</div><div class="ex-detail">10 min: 30 sec sprint (high intensity) → 30 sec walk. Repeat ×10. Best fat-burning finisher. Don't skip.</div></div><div class="ex-sets">10 × 30/30</div></div>
+    </div>
+  </div>
+
+  <!-- SUN REST -->
+  <div class="ex-panel" id="ex-sun">
+    <div class="rest-day-msg">
+      <h2>Rest Day</h2>
+      <p>No gym today. Your muscles grow during recovery, not during workouts. Use Sunday to go for a light 20–30 min walk, do mobility/stretching, and meal prep for the week. Sleep well.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ SUPPLEMENTS ═══════════════════════════════ -->
+<section class="panel" id="p-supplements">
+  <div class="ptag">What You Need vs. What Food Gives</div>
+  <div class="ptitle">Supplement Guide</div>
+
+  <div class="supp-status">
+    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--r)">2</div><div class="supp-stat-l">Critical — Must Take</div></div>
+    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--o)">2</div><div class="supp-stat-l">Needed — Highly Recommended</div></div>
+    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--g)">1</div><div class="supp-stat-l">Performance Boost</div></div>
+    <div class="supp-stat-card"><div class="supp-stat-n" style="color:var(--b)">7</div><div class="supp-stat-l">Complete From Food</div></div>
+  </div>
+
+  <div class="ptag">Must Take</div>
+  <div class="supp-cards" style="margin-bottom:24px">
+    <div class="supp-card">
+      <div>
+        <div class="supp-name">Vitamin D3 + K2</div>
+        <div class="supp-dose">2,000 IU D3 + 100 mcg K2 · With breakfast (fat meal) · Daily</div>
+        <div class="supp-why">Your diet provides only ~90 IU/day from food — target is 600 IU minimum. 15 min sunlight helps but is unreliable. Deficiency causes fatigue, poor gym performance, low immunity, and low testosterone. K2 ensures calcium goes to bones, not arteries. ~₹250–300/month.</div>
+        <div class="supp-food-src">Food provides: ~15% of requirement. Gap: 85%. Cannot be fixed by diet alone.</div>
+      </div>
+      <span class="supp-badge critical">CRITICAL</span>
+    </div>
+    <div class="supp-card">
+      <div>
+        <div class="supp-name">Vitamin B12</div>
+        <div class="supp-dose">500 µg (methylcobalamin form) · Morning · With water · Daily</div>
+        <div class="supp-why">Your diet gives ~2.7 µg — just at the RDA. But vegetarian B12 from dairy has lower bioavailability. For gym performance, energy, nerve health, and red blood cell production, supplementing 500 µg ensures you never run deficient. Especially important since you're in a calorie deficit. ~₹150–200/month.</div>
+        <div class="supp-food-src">Food provides: ~2.7 µg (milk, curd, paneer) but low bioavailability. Supplement is insurance.</div>
+      </div>
+      <span class="supp-badge critical">CRITICAL</span>
+    </div>
+  </div>
+
+  <div class="ptag">Needed — Highly Recommended</div>
+  <div class="supp-cards" style="margin-bottom:24px">
+    <div class="supp-card">
+      <div>
+        <div class="supp-name">Creatine Monohydrate</div>
+        <div class="supp-dose">5g · Post-Workout · With water · Daily (even rest days)</div>
+        <div class="supp-why">The single most research-backed supplement for strength and muscle development. Vegetarians have ZERO dietary creatine (it's only in meat), so your baseline is empty — you'll see bigger gains than meat-eaters when you start. Helps build strength and muscle while in a calorie deficit. Take consistently — no loading needed. ~₹400–600 for 3 months (generic/bulk). Best ROI of any supplement.</div>
+        <div class="supp-food-src">Food provides: 0 mg (creatine only in meat). Complete gap.</div>
+      </div>
+      <span class="supp-badge needed">NEEDED</span>
+    </div>
+    <div class="supp-card">
+      <div>
+        <div class="supp-name">Zinc</div>
+        <div class="supp-dose">15–25 mg elemental zinc · With dinner · Daily</div>
+        <div class="supp-why">Your food covers ~8 mg but target is 8–10 mg minimum. Vegetarian zinc has poor bioavailability (phytates in grains block absorption). Zinc is critical for testosterone production, immune function, and recovery. Low zinc = slow gains, low energy, poor immunity. ~₹150/month.</div>
+        <div class="supp-food-src">Food provides: ~8 mg but only ~30% absorbed from plant sources. Effective intake ~2.4 mg.</div>
+      </div>
+      <span class="supp-badge needed">NEEDED</span>
+    </div>
+  </div>
+
+  <div class="ptag">Performance Boost</div>
+  <div class="supp-cards" style="margin-bottom:32px">
+    <div class="supp-card">
+      <div>
+        <div class="supp-name">Magnesium Glycinate</div>
+        <div class="supp-dose">300 mg · Bedtime · Daily</div>
+        <div class="supp-why">Food covers ~450 mg but glycinate form at night specifically improves sleep quality, reduces cortisol, and accelerates muscle recovery. Since you sleep late (11 PM), good sleep quality is essential. Cortisol from poor sleep causes fat retention around belly — which works against your aesthetic goal. ~₹400/month.</div>
+        <div class="supp-food-src">Food provides: ~453 mg total magnesium. Supplement adds sleep-specific benefits beyond food quantity.</div>
+      </div>
+      <span class="supp-badge boost">BOOST</span>
+    </div>
+  </div>
+
+  <div class="ptag">Complete from Food — No Supplement Needed</div>
+  <div class="complete-list">
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Protein (143g/day)</strong> — Soya chunks, paneer, dal, curd, milk, oats fully cover your needs</div><span class="complete-tag">COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Calcium (1,450mg/day)</strong> — Milk, curd, paneer, rajma, sesame cover 145% of target</div><span class="complete-tag">COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Iron (19.7mg/day)</strong> — Dal, rajma, soya, oats, spinach cover the full target. Always pair with lemon (Vit C) for absorption.</div><span class="complete-tag">COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Magnesium (453mg/day)</strong> — Oats, peanuts, spinach, banana, dal cover 115%+</div><span class="complete-tag">COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Potassium (~3,000mg/day)</strong> — Banana, curd, dal, milk, sabzi provide ample potassium</div><span class="complete-tag">COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Vitamin C (~62mg/day)</strong> — Lemon (daily), tomato, capsicum. Add 1 amla/day to easily hit 80mg+</div><span class="complete-tag">NEARLY COMPLETE</span></div>
+    <div class="complete-item"><div class="complete-icon">✅</div><div class="complete-text"><strong>Omega-3 ALA (~1.8g/day)</strong> — Flaxseeds + walnuts provide ALA. Add 1 extra walnut to comfortably exceed 2g</div><span class="complete-tag">NEARLY COMPLETE</span></div>
+  </div>
+
+  <div class="pnote"><strong>Supplement timing:</strong> B12 + D3 → with breakfast. Creatine → post-workout. Zinc → with dinner. Magnesium → at bedtime. Keep zinc 2 hours away from calcium-rich meals for best absorption.</div>
+</section>
+
+<!-- ═══════════════════════════════ TRACKER ═══════════════════════════════ -->
+<section class="panel" id="p-tracker">
+  <div class="ptag">Bonus Feature</div>
+  <div class="ptitle">Daily Tracker</div>
+  <div class="pnote">Track your water, daily habits, and weight progress right here. Data saves in your browser so it's here next time you open this file.</div>
+
+  <div class="tracker-grid">
+    <!-- Water Tracker -->
+    <div class="tracker-card">
+      <div class="tracker-card-title">💧 Water Intake</div>
+      <div class="water-dots" id="waterDots"></div>
+      <div class="water-label" id="waterLabel">0 / 3.5L (0 of 14 glasses)</div>
+      <div style="margin-top:12px;display:flex;gap:8px">
+        <button class="w-btn" onclick="resetWater()" style="background:var(--s3);color:var(--muted)">Reset</button>
+        <button class="w-btn" onclick="refillWater()">+ Fill All</button>
+      </div>
+    </div>
+
+    <!-- Daily Checklist -->
+    <div class="tracker-card">
+      <div class="tracker-card-title">✅ Daily Checklist</div>
+      <div class="checklist-items" id="checklist">
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took B12 + D3 with breakfast</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Creatine post-workout</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Zinc with dinner</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Magnesium at bedtime</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Hit protein target (140g+)</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Completed gym session</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">15 min morning sunlight</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Amla / lemon with iron-rich meal</div></div>
+      </div>
+    </div>
+
+    <!-- Weight Log -->
+    <div class="tracker-card">
+      <div class="tracker-card-title">📊 Weight Log</div>
+      <div class="weight-log">
+        <div class="weight-input-row">
+          <input class="weight-inp" id="wInput" type="number" placeholder="Enter weight (kg)" step="0.1" min="40" max="200">
+          <button class="w-btn" onclick="logWeight()">Log</button>
+        </div>
+        <div class="weight-entries" id="weightEntries"><div style="font-family:var(--mono);font-size:11px;color:var(--dim);padding:8px">No entries yet. Log every Monday morning.</div></div>
+      </div>
+    </div>
+
+    <!-- BMI + Goal -->
+    <div class="tracker-card">
+      <div class="tracker-card-title">🎯 BMI & Goal</div>
+      <div class="bmi-display">
+        <div class="bmi-val" id="bmiVal">25.8</div>
+        <div class="bmi-label">Current BMI (96kg / 5'8")</div>
+      </div>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border)"><span>Current</span><span style="font-family:var(--mono);color:var(--y)">96 kg — 25.8 BMI</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border)"><span>Goal Weight</span><span style="font-family:var(--mono);color:var(--g)">~80 kg — 21.1 BMI</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding:6px 0;border-bottom:1px solid var(--border)"><span>To Lose</span><span style="font-family:var(--mono);color:var(--o)">~16 kg</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);padding:6px 0"><span>Est. Timeline</span><span style="font-family:var(--mono);color:var(--g)">~28–36 weeks</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Notes -->
+  <div style="background:var(--s1);border:1px solid var(--border);padding:24px">
+    <div class="tracker-card-title" style="margin-bottom:12px">📝 Weekly Notes</div>
+    <textarea id="weekNotes" style="width:100%;background:var(--s2);border:1px solid var(--border);color:var(--text);font-family:var(--body);font-size:13px;padding:14px;border-radius:3px;resize:vertical;min-height:100px;outline:none;line-height:1.6" placeholder="Write your weekly reflections, how you're feeling, what's working, measurements, etc..." oninput="saveNotes()"></textarea>
+    <div style="font-family:var(--mono);font-size:9px;color:var(--dim);margin-top:6px;letter-spacing:1px">AUTO-SAVED TO BROWSER</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ TIPS ═══════════════════════════════ -->
+<section class="panel" id="p-tips">
+  <div class="ptag">Practical Guide</div>
+  <div class="ptitle">Tips & Hacks</div>
+
+  <div class="tip-grid">
+    <div class="tip-card">
+      <div class="tip-icon">💪</div>
+      <div class="tip-title">Aesthetic Physique Principles</div>
+      <div class="tip-list">
+        <div class="tip-li">V-taper = wide shoulders + narrow waist. Prioritise lateral raises every push day.</div>
+        <div class="tip-li">Progressive overload every week — add weight, reps, or sets. This is THE rule.</div>
+        <div class="tip-li">Don't chase pump — chase progressive strength on key lifts.</div>
+        <div class="tip-li">Aesthetics = muscle in right places + low body fat. You need both simultaneously.</div>
+        <div class="tip-li">Photo progress every 2 weeks. Scale lies. Photos don't.</div>
+        <div class="tip-li">Abs are built in the kitchen — 140g protein + 500 cal deficit = visible abs in 6–8 months.</div>
+      </div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">💰</div>
+      <div class="tip-title">Budget Protein Ranking</div>
+      <div class="tip-list">
+        <div class="tip-li">Soya chunks — ₹70/250g · 52g protein/100g dry · #1 budget protein source</div>
+        <div class="tip-li">Roasted chana — ₹60/250g · High protein, portable, zero cooking</div>
+        <div class="tip-li">Moong/Masoor/Rajma dal — ₹80–120/kg · Cook in bulk twice a week</div>
+        <div class="tip-li">Toned milk — ₹26/500ml · 8g protein/glass + calcium</div>
+        <div class="tip-li">Homemade curd — almost free if made from toned milk yourself</div>
+        <div class="tip-li">Homemade paneer — 2L milk → ~400g paneer, saves 60% vs packaged</div>
+      </div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">🥘</div>
+      <div class="tip-title">Sunday Meal Prep (30 min)</div>
+      <div class="tip-list">
+        <div class="tip-li">Soak rajma/chana Saturday night → cook Sunday morning → refrigerate</div>
+        <div class="tip-li">Cook a big pot of moong/masoor dal → reheats in 2 min all week</div>
+        <div class="tip-li">Make curd every 2 days → set it yourself, costs ₹12 vs ₹30 packaged</div>
+        <div class="tip-li">Make homemade paneer weekly → cheapest protein upgrade possible</div>
+        <div class="tip-li">Boil a batch of soya chunks → refrigerate → add to any meal instantly</div>
+        <div class="tip-li">Prep overnight oats on weeknights → zero morning effort</div>
+      </div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">😴</div>
+      <div class="tip-title">Sleep & Recovery (You Sleep Late)</div>
+      <div class="tip-list">
+        <div class="tip-li">Sleep 11 PM → wake 7 AM = 8 hours. That's actually good — protect this.</div>
+        <div class="tip-li">Magnesium glycinate at 10 PM will improve deep sleep quality significantly.</div>
+        <div class="tip-li">No screens 30 min before sleep if possible — blue light cuts melatonin.</div>
+        <div class="tip-li">Haldi doodh at 10 PM is specifically timed for sleep quality + recovery.</div>
+        <div class="tip-li">Growth hormone peaks in first 2 hours of deep sleep — quality > quantity.</div>
+        <div class="tip-li">Don't train within 2 hours of sleep — too stimulating for nervous system.</div>
+      </div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">💧</div>
+      <div class="tip-title">Hydration & Fat Loss</div>
+      <div class="tip-list">
+        <div class="tip-li">Target 3.5L water daily. Dehydration mimics hunger — most cravings are actually thirst.</div>
+        <div class="tip-li">Post-gym electrolytes: nimbu pani + rock salt + pinch jeera. Zero cost.</div>
+        <div class="tip-li">Black coffee (no sugar) before gym → boosts fat burning + performance.</div>
+        <div class="tip-li">Drink a full glass of water 20 min before every meal — reduces portion size naturally.</div>
+        <div class="tip-li">Warm lemon water in the morning (½ lemon, no sugar) — boosts Vit C, aids digestion, and counts towards water intake.</div>
+      </div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-icon">📏</div>
+      <div class="tip-title">Track Progress Right</div>
+      <div class="tip-list">
+        <div class="tip-li">Weigh every Monday morning — same time, after toilet, before eating/drinking.</div>
+        <div class="tip-li">Target 0.4–0.6 kg loss/week. Slower = more muscle preserved = better aesthetics.</div>
+        <div class="tip-li">Measure waist monthly — key aesthetic indicator. Target: under 85cm.</div>
+        <div class="tip-li">If stalled 2+ weeks → drop 100 kcal from carbs OR add 20 min daily walk.</div>
+        <div class="tip-li">If losing too fast (>0.8 kg/week) → add 150 kcal (extra roti or curd serving).</div>
+        <div class="tip-li">Strength in gym going up while losing weight = you're building muscle. Perfect.</div>
+      </div>
+    </div>
+    <div class="tip-card span2">
+      <div class="tip-icon">🛒</div>
+      <div class="tip-title">Budget Swaps</div>
+      <table class="tbl" style="margin-bottom:0">
+        <thead><tr><th>Expensive Item</th><th>Budget Swap</th><th>Saving</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Whey protein ₹2,500/kg</td><td>Soya chunks + curd + dal</td><td>~90% cheaper</td><td>Same protein, better micronutrients</td></tr>
+          <tr><td>Packaged paneer ₹80/200g</td><td>Homemade (2L milk)</td><td>~60% cheaper</td><td>Fresher, more protein per rupee</td></tr>
+          <tr><td>Expensive nuts (cashew, pistachio)</td><td>Peanuts + pumpkin seeds</td><td>~75% cheaper</td><td>Peanuts ₹60/kg, excellent fat+protein</td></tr>
+          <tr><td>Protein bars ₹80–120 each</td><td>Roasted chana + peanut butter</td><td>~95% cheaper</td><td>₹3 snack, 15g protein</td></tr>
+          <tr><td>Fish oil capsules</td><td>1 tsp flaxseeds + 2 walnuts daily</td><td>~80% cheaper</td><td>ALA source, ₹80 for months of supply</td></tr>
+          <tr><td>Packaged curd ₹30/100g</td><td>Homemade curd</td><td>~70% cheaper</td><td>More probiotic, set it in 8 hours</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer style="border-top:1px solid var(--border);padding:24px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:gap">
+  <span style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim)">Pure Vegetarian · 5'8" · 96kg → 80kg · Aesthetic Physique</span>
+  <span style="font-family:var(--mono);font-size:9px;color:var(--dim)">Sleep 11 PM · Wake 7 AM · Gym 6×/Week</span>
+</footer>
+
+<script>
+// ── TAB NAVIGATION ──
+function show(id,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('p-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// ── EXERCISE DAY TABS ──
+function showEx(id,btn){
+  document.querySelectorAll('.ex-panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ex-tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('ex-'+id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// ── WATER TRACKER ──
+let waterCount = parseInt(localStorage.getItem('water')||'0');
+function buildWater(){
+  const c=document.getElementById('waterDots');
+  c.innerHTML='';
+  for(let i=0;i<14;i++){
+    const d=document.createElement('div');
+    d.className='wdot'+(i<waterCount?' filled':'');
+    d.textContent=i<waterCount?'💧':'';
+    d.onclick=()=>{waterCount=i+1;localStorage.setItem('water',waterCount);buildWater()};
+    c.appendChild(d);
+  }
+  document.getElementById('waterLabel').textContent=`${(waterCount*0.25).toFixed(2)}L / 3.5L (${waterCount} of 14 glasses)`;
+}
+function resetWater(){waterCount=0;localStorage.setItem('water',0);buildWater();}
+function refillWater(){waterCount=14;localStorage.setItem('water',14);buildWater();}
+buildWater();
+
+// ── CHECKLIST ──
+function toggleCheck(el){
+  const box=el.querySelector('.check-box');
+  const txt=el.querySelector('.check-text');
+  const done=!txt.classList.contains('done');
+  txt.classList.toggle('done',done);
+  box.classList.toggle('done',done);
+  box.textContent=done?'✓':'✓';
+  box.style.color=done?'#000':'transparent';
+}
+
+// ── WEIGHT LOG ──
+let weights=JSON.parse(localStorage.getItem('weights')||'[]');
+function logWeight(){
+  const v=parseFloat(document.getElementById('wInput').value);
+  if(!v||v<30||v>300)return;
+  const now=new Date();
+  const label=now.toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+  weights.unshift({v,label});
+  if(weights.length>10)weights.pop();
+  localStorage.setItem('weights',JSON.stringify(weights));
+  document.getElementById('wInput').value='';
+  renderWeights();
+  updateBMI(v);
+}
+function renderWeights(){
+  const c=document.getElementById('weightEntries');
+  if(!weights.length){c.innerHTML='<div style="font-family:var(--mono);font-size:11px;color:var(--dim);padding:8px">No entries yet.</div>';return;}
+  c.innerHTML=weights.map((w,i)=>{
+    const diff=i<weights.length-1?w.v-weights[i+1].v:0;
+    const col=diff<0?'var(--g)':diff>0?'var(--r)':'var(--muted)';
+    const sign=diff<0?'↓':diff>0?'↑':'';
+    return `<div class="weight-entry"><span>${w.label}</span><span class="w-val">${w.v} kg ${i<weights.length-1?`<span style="color:${col};font-size:10px">${sign}${Math.abs(diff).toFixed(1)}</span>`:''}</span></div>`;
+  }).join('');
+}
+function updateBMI(w){
+  const h=1.727;const bmi=(w/(h*h)).toFixed(1);
+  document.getElementById('bmiVal').textContent=bmi;
+}
+renderWeights();
+if(weights.length)updateBMI(weights[0].v);
+
+// ── NOTES ──
+const savedNotes=localStorage.getItem('weekNotes')||'';
+document.getElementById('weekNotes').value=savedNotes;
+function saveNotes(){localStorage.setItem('weekNotes',document.getElementById('weekNotes').value);}
+</script>
+</body>
+</html>
