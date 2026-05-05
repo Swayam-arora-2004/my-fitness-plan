@@ -1,8 +1,8 @@
 # my-fitness-plan
 
-🥗 My Weekly Diet Plan A personal diet tracker built for my own health goals — tailored to my lifestyle, local Gurgaon markets, and weekly routine.
+🥗 My Weekly Diet Plan A personal diet and fitness tracker built for my own health goals — tailored to my lifestyle, and weekly routine.
 
-🌐 Live : 
+🌐 Live: https://swayam-arora-2004.github.io/my-fitness-plan/
 
 ⚙️ Built With HTML · CSS · JavaScript
 
