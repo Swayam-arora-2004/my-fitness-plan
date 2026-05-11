@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>My Fitness Plan</title>
+<script src="https://js.puter.com/v2/"></script>
 
 <style>
 :root{
@@ -16,7 +17,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.6;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;overflow-x:hidden}
 
 /* ── NOISE OVERLAY ── */
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4}
@@ -35,7 +36,7 @@ h1 em{color:var(--g);font-style:normal}
 .stat-l{font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-top:3px}
 
 /* ── NAV ── */
-.nav-wrap{position:sticky;top:0;z-index:200;background:rgba(10,15,10,.96);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-wrap{position:sticky;top:0;z-index:200;background:rgba(10,15,10,.96);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
 .nav{display:flex;overflow-x:auto;scrollbar-width:none;padding:0 48px}
 .nav::-webkit-scrollbar{display:none}
 .tab{font-family:var(--mono);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:16px 20px;color:var(--dim);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .2s,border-color .2s}
@@ -63,7 +64,9 @@ h1 em{color:var(--g);font-style:normal}
 .gg{color:var(--g)}.yy{color:var(--y)}.oo{color:var(--o)}.bb{color:var(--b)}.pp{color:var(--p)}.rr{color:var(--r)}
 
 /* ── TABLE ── */
-.tbl{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:32px}
+.tbl-container{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:32px;scrollbar-width:none}
+.tbl-container::-webkit-scrollbar{display:none}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:0}
 .tbl th{text-align:left;padding:10px 14px;font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);background:var(--s2);border-bottom:1px solid var(--border)}
 .tbl td{padding:12px 14px;border-bottom:1px solid var(--border);vertical-align:top}
 .tbl tr:last-child td{border-bottom:none}
@@ -225,6 +228,23 @@ h1 em{color:var(--g);font-style:normal}
   .supp-card{grid-template-columns:1fr}
   .ex-day-badge{font-size:36px}
   h1{font-size:48px}
+
+  /* ── 7-DAY SPLIT MOBILE SCROLL ── */
+  .week-split-grid {
+    display: flex !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 4px;
+    padding-bottom: 8px;
+  }
+  .week-split-grid::-webkit-scrollbar {
+    display: none;
+  }
+  .week-split-grid > div {
+    min-width: 85px;
+    flex: 1;
+  }
 }
 </style>
 </head>
@@ -255,6 +275,7 @@ h1 em{color:var(--g);font-style:normal}
     <button class="tab" onclick="show('supplements',this)">Supplements</button>
     <button class="tab" onclick="show('tracker',this)">Tracker</button>
     <button class="tab" onclick="show('tips',this)">Tips</button>
+    <button class="tab" onclick="show('tracker', Array.from(document.querySelectorAll('.tab')).find(t => t.textContent.includes('Tracker'))); setTimeout(() => document.getElementById('sync-panel').scrollIntoView({behavior:'smooth'}), 120)" id="nav-sync-btn" style="margin-left:auto;color:var(--dim);border:1px dashed var(--border);border-radius:4px;padding:6px 12px;margin-top:10px;margin-bottom:10px;display:flex;align-items:center;gap:6px;height:fit-content;font-size:9px;letter-spacing:1px;font-family:var(--mono);text-transform:uppercase;cursor:pointer;background:transparent;transition:all .2s">☁️ Offline</button>
   </div>
 </nav>
 
@@ -274,27 +295,29 @@ h1 em{color:var(--g);font-style:normal}
     <div class="card"><div class="card-l">Fats</div><div class="card-v oo">50–58g</div><div class="card-d">Healthy fats for hormones</div></div>
   </div>
 
-  <table class="tbl">
-    <thead><tr><th>Nutrient</th><th>Daily Target</th><th>Primary Sources</th><th>Status</th></tr></thead>
-    <tbody>
-      <tr><td><span class="dot" style="background:var(--b)"></span>Protein</td><td style="font-family:var(--mono);color:var(--b)">140–145 g</td><td>Soya, paneer (or eggs), curd, dal, rajma, chana, milk, oats</td><td class="ok">✓ Food covers it</td></tr>
-      <tr><td><span class="dot" style="background:var(--g)"></span>Carbs</td><td style="font-family:var(--mono);color:var(--g)">195–210 g</td><td>Oats, whole wheat roti, rice (limited), banana</td><td class="ok">✓ Food covers it</td></tr>
-      <tr><td><span class="dot" style="background:var(--o)"></span>Fats</td><td style="font-family:var(--mono);color:var(--o)">50–58 g</td><td>Peanuts, peanut butter, flaxseeds, curd, paneer (or eggs)</td><td class="ok">✓ Food covers it</td></tr>
-      <tr><td><span class="dot" style="background:#f59e0b"></span>Calcium</td><td style="font-family:var(--mono);color:#f59e0b">1,000 mg</td><td>Milk, curd, paneer (or eggs), ragi, rajma, sesame</td><td class="ok">✓ Food covers it</td></tr>
-      <tr><td><span class="dot" style="background:var(--r)"></span>Iron</td><td style="font-family:var(--mono);color:var(--r)">17–18 mg</td><td>Dal, rajma, spinach, oats, sesame, jaggery</td><td class="warn">⚠ Partially — Supplement</td></tr>
-      <tr><td><span class="dot" style="background:#f97316"></span>Vitamin C</td><td style="font-family:var(--mono);color:#f97316">65–75 mg</td><td>Lemon, amla, tomato, capsicum, guava</td><td class="ok">✓ Food covers it</td></tr>
-      <tr><td><span class="dot" style="background:#eab308"></span>Vitamin D</td><td style="font-family:var(--mono);color:#eab308">600–800 IU</td><td>Sunlight (15 min morning) + fortified milk</td><td class="bad">✗ Supplement needed</td></tr>
-      <tr><td><span class="dot" style="background:var(--p)"></span>Vitamin B12</td><td style="font-family:var(--mono);color:var(--p)">2.4 µg</td><td>Milk, curd, paneer, eggs (insufficient for veg)</td><td class="bad">✗ Supplement needed</td></tr>
-      <tr><td><span class="dot" style="background:#06b6d4"></span>Zinc</td><td style="font-family:var(--mono);color:#06b6d4">8–10 mg</td><td>Oats, rajma, pumpkin seeds, peanuts</td><td class="warn">⚠ Borderline — Supplement</td></tr>
-      <tr><td><span class="dot" style="background:#10b981"></span>Magnesium</td><td style="font-family:var(--mono);color:#10b981">350–400 mg</td><td>Oats, spinach, peanuts, banana, dal</td><td class="ok">✓ Food covers it</td></tr>
-      <tr><td><span class="dot" style="background:#f43f5e"></span>Omega-3</td><td style="font-family:var(--mono);color:#f43f5e">ALA 2g+</td><td>Flaxseeds (1 tsp/day), walnuts</td><td class="warn">⚠ ALA only — Supplement if budget allows</td></tr>
-    </tbody>
-  </table>
+  <div class="tbl-container">
+    <table class="tbl">
+      <thead><tr><th>Nutrient</th><th>Daily Target</th><th>Primary Sources</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><span class="dot" style="background:var(--b)"></span>Protein</td><td style="font-family:var(--mono);color:var(--b)">140–145 g</td><td>Soya, paneer (or eggs), curd, dal, rajma, chana, milk, oats</td><td class="ok">✓ Food covers it</td></tr>
+        <tr><td><span class="dot" style="background:var(--g)"></span>Carbs</td><td style="font-family:var(--mono);color:var(--g)">195–210 g</td><td>Oats, whole wheat roti, rice (limited), banana</td><td class="ok">✓ Food covers it</td></tr>
+        <tr><td><span class="dot" style="background:var(--o)"></span>Fats</td><td style="font-family:var(--mono);color:var(--o)">50–58 g</td><td>Peanuts, peanut butter, flaxseeds, curd, paneer (or eggs)</td><td class="ok">✓ Food covers it</td></tr>
+        <tr><td><span class="dot" style="background:#f59e0b"></span>Calcium</td><td style="font-family:var(--mono);color:#f59e0b">1,000 mg</td><td>Milk, curd, paneer (or eggs), ragi, rajma, sesame</td><td class="ok">✓ Food covers it</td></tr>
+        <tr><td><span class="dot" style="background:var(--r)"></span>Iron</td><td style="font-family:var(--mono);color:var(--r)">17–18 mg</td><td>Dal, rajma, spinach, oats, sesame, jaggery</td><td class="warn">⚠ Partially — Supplement</td></tr>
+        <tr><td><span class="dot" style="background:#f97316"></span>Vitamin C</td><td style="font-family:var(--mono);color:#f97316">65–75 mg</td><td>Lemon, amla, tomato, capsicum, guava</td><td class="ok">✓ Food covers it</td></tr>
+        <tr><td><span class="dot" style="background:#eab308"></span>Vitamin D</td><td style="font-family:var(--mono);color:#eab308">600–800 IU</td><td>Sunlight (15 min morning) + fortified milk</td><td class="bad">✗ Supplement needed</td></tr>
+        <tr><td><span class="dot" style="background:var(--p)"></span>Vitamin B12</td><td style="font-family:var(--mono);color:var(--p)">2.4 µg</td><td>Milk, curd, paneer, eggs (insufficient for veg)</td><td class="bad">✗ Supplement needed</td></tr>
+        <tr><td><span class="dot" style="background:#06b6d4"></span>Zinc</td><td style="font-family:var(--mono);color:#06b6d4">8–10 mg</td><td>Oats, rajma, pumpkin seeds, peanuts</td><td class="warn">⚠ Borderline — Supplement</td></tr>
+        <tr><td><span class="dot" style="background:#10b981"></span>Magnesium</td><td style="font-family:var(--mono);color:#10b981">350–400 mg</td><td>Oats, spinach, peanuts, banana, dal</td><td class="ok">✓ Food covers it</td></tr>
+        <tr><td><span class="dot" style="background:#f43f5e"></span>Omega-3</td><td style="font-family:var(--mono);color:#f43f5e">ALA 2g+</td><td>Flaxseeds (1 tsp/day), walnuts</td><td class="warn">⚠ ALA only — Supplement if budget allows</td></tr>
+      </tbody>
+    </table>
+  </div>
 
   <!-- Week grid -->
   <div class="ptag" style="margin-top:40px">Week Structure</div>
   <div class="ptitle" style="font-size:32px">7-Day Split</div>
-  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;background:var(--border);border:1px solid var(--border);margin-bottom:32px">
+  <div class="week-split-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;background:var(--border);border:1px solid var(--border);margin-bottom:32px">
     <div style="background:var(--s1);padding:18px 10px;text-align:center;border-top:2px solid var(--g)"><div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">MON</div><div style="font-size:12px;font-weight:600;color:var(--g)">🏋️ Push</div><div style="font-family:var(--font);font-size:20px;color:var(--p)">1,950</div></div>
     <div style="background:var(--s1);padding:18px 10px;text-align:center;border-top:2px solid var(--g)"><div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">TUE</div><div style="font-size:12px;font-weight:600;color:var(--g)">🏋️ Pull</div><div style="font-family:var(--font);font-size:20px;color:var(--p)">1,950</div></div>
     <div style="background:var(--s1);padding:18px 10px;text-align:center;border-top:2px solid var(--g)"><div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:6px">WED</div><div style="font-size:12px;font-weight:600;color:var(--g)">🏋️ Legs</div><div style="font-family:var(--font);font-size:20px;color:var(--p)">1,950</div></div>
@@ -513,23 +536,25 @@ h1 em{color:var(--g);font-style:normal}
 
   <div class="day-sum">
     <div class="day-sum-title">Daily Total — Mon to Sat</div>
-    <table class="sum-tbl">
-      <thead><tr><th>Nutrient</th><th>Target</th><th>Achieved</th><th>Coverage</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td>Calories</td><td>1,950 kcal</td><td>~1,985 kcal</td><td><span class="bar-wrap"><span class="bar-fill" style="width:98%;background:var(--g)"></span></span></td><td class="ok">✓ On Target</td></tr>
-        <tr><td>Protein</td><td>140–145 g</td><td>~143 g</td><td><span class="bar-wrap"><span class="bar-fill" style="width:99%;background:var(--b)"></span></span></td><td class="ok">✓ Complete</td></tr>
-        <tr><td>Carbohydrates</td><td>195–210 g</td><td>~272 g</td><td><span class="bar-wrap"><span class="bar-fill" style="width:95%;background:var(--g)"></span></span></td><td class="ok">✓ Good</td></tr>
-        <tr><td>Fats</td><td>50–58 g</td><td>~66 g</td><td><span class="bar-wrap"><span class="bar-fill" style="width:90%;background:var(--o)"></span></span></td><td class="ok">✓ Good</td></tr>
-        <tr><td>Calcium</td><td>1,000 mg</td><td>~1,450 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:#f59e0b"></span></span></td><td class="ok">✓ Complete</td></tr>
-        <tr><td>Iron</td><td>17–18 mg</td><td>~19.7 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:var(--r)"></span></span></td><td class="ok">✓ Complete from food</td></tr>
-        <tr><td>Magnesium</td><td>350–400 mg</td><td>~453 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:#10b981"></span></span></td><td class="ok">✓ Complete</td></tr>
-        <tr><td>Zinc</td><td>8–10 mg</td><td>~8.0 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:80%;background:#06b6d4"></span></span></td><td class="warn">⚠ Borderline</td></tr>
-        <tr><td>Vitamin C</td><td>65–75 mg</td><td>~62 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:88%;background:#f97316"></span></span></td><td class="warn">⚠ Add amla daily</td></tr>
-        <tr><td>Vitamin B12</td><td>2.4 µg</td><td>~2.7 µg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:var(--p)"></span></span></td><td class="ok">✓ + Supplement to be safe</td></tr>
-        <tr><td>Vitamin D</td><td>600 IU</td><td>~90 IU (food only)</td><td><span class="bar-wrap"><span class="bar-fill" style="width:15%;background:#eab308"></span></span></td><td class="bad">✗ Supplement essential</td></tr>
-        <tr><td>Omega-3</td><td>ALA 2g+</td><td>~1.8g (ALA)</td><td><span class="bar-wrap"><span class="bar-fill" style="width:90%;background:#f43f5e"></span></span></td><td class="warn">⚠ Add walnuts or algae cap</td></tr>
-      </tbody>
-    </table>
+    <div class="tbl-container">
+      <table class="sum-tbl">
+        <thead><tr><th>Nutrient</th><th>Target</th><th>Achieved</th><th>Coverage</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Calories</td><td>1,950 kcal</td><td>~1,985 kcal</td><td><span class="bar-wrap"><span class="bar-fill" style="width:98%;background:var(--g)"></span></span></td><td class="ok">✓ On Target</td></tr>
+          <tr><td>Protein</td><td>140–145 g</td><td>~143 g</td><td><span class="bar-wrap"><span class="bar-fill" style="width:99%;background:var(--b)"></span></span></td><td class="ok">✓ Complete</td></tr>
+          <tr><td>Carbohydrates</td><td>195–210 g</td><td>~272 g</td><td><span class="bar-wrap"><span class="bar-fill" style="width:95%;background:var(--g)"></span></span></td><td class="ok">✓ Good</td></tr>
+          <tr><td>Fats</td><td>50–58 g</td><td>~66 g</td><td><span class="bar-wrap"><span class="bar-fill" style="width:90%;background:var(--o)"></span></span></td><td class="ok">✓ Good</td></tr>
+          <tr><td>Calcium</td><td>1,000 mg</td><td>~1,450 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:#f59e0b"></span></span></td><td class="ok">✓ Complete</td></tr>
+          <tr><td>Iron</td><td>17–18 mg</td><td>~19.7 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:var(--r)"></span></span></td><td class="ok">✓ Complete from food</td></tr>
+          <tr><td>Magnesium</td><td>350–400 mg</td><td>~453 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:#10b981"></span></span></td><td class="ok">✓ Complete</td></tr>
+          <tr><td>Zinc</td><td>8–10 mg</td><td>~8.0 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:80%;background:#06b6d4"></span></span></td><td class="warn">⚠ Borderline</td></tr>
+          <tr><td>Vitamin C</td><td>65–75 mg</td><td>~62 mg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:88%;background:#f97316"></span></span></td><td class="warn">⚠ Add amla daily</td></tr>
+          <tr><td>Vitamin B12</td><td>2.4 µg</td><td>~2.7 µg</td><td><span class="bar-wrap"><span class="bar-fill" style="width:100%;background:var(--p)"></span></span></td><td class="ok">✓ + Supplement to be safe</td></tr>
+          <tr><td>Vitamin D</td><td>600 IU</td><td>~90 IU (food only)</td><td><span class="bar-wrap"><span class="bar-fill" style="width:15%;background:#eab308"></span></span></td><td class="bad">✗ Supplement essential</td></tr>
+          <tr><td>Omega-3</td><td>ALA 2g+</td><td>~1.8g (ALA)</td><td><span class="bar-wrap"><span class="bar-fill" style="width:90%;background:#f43f5e"></span></span></td><td class="warn">⚠ Add walnuts or algae cap</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>
 
@@ -598,16 +623,18 @@ h1 em{color:var(--g);font-style:normal}
 
   <div class="day-sum">
     <div class="day-sum-title">Sunday Total</div>
-    <table class="sum-tbl">
-      <thead><tr><th>Nutrient</th><th>Target</th><th>Achieved</th><th>Status</th></tr></thead>
-      <tbody>
-        <tr><td>Calories</td><td>~1,700 kcal</td><td>~1,880 kcal</td><td class="ok">✓ Slight flex — fine</td></tr>
-        <tr><td>Protein</td><td>120g+</td><td>~123g</td><td class="ok">✓ Complete</td></tr>
-        <tr><td>Carbs</td><td>160–180g</td><td>~212g</td><td class="warn">⚠ Slightly high but rest day buffer</td></tr>
-        <tr><td>Calcium</td><td>1,000mg</td><td>~1,470mg</td><td class="ok">✓ Complete</td></tr>
-        <tr><td>Iron</td><td>17–18mg</td><td>~15.3mg</td><td class="warn">⚠ Slightly under — eat amla</td></tr>
-      </tbody>
-    </table>
+    <div class="tbl-container">
+      <table class="sum-tbl">
+        <thead><tr><th>Nutrient</th><th>Target</th><th>Achieved</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Calories</td><td>~1,700 kcal</td><td>~1,880 kcal</td><td class="ok">✓ Slight flex — fine</td></tr>
+          <tr><td>Protein</td><td>120g+</td><td>~123g</td><td class="ok">✓ Complete</td></tr>
+          <tr><td>Carbs</td><td>160–180g</td><td>~212g</td><td class="warn">⚠ Slightly high but rest day buffer</td></tr>
+          <tr><td>Calcium</td><td>1,000mg</td><td>~1,470mg</td><td class="ok">✓ Complete</td></tr>
+          <tr><td>Iron</td><td>17–18mg</td><td>~15.3mg</td><td class="warn">⚠ Slightly under — eat amla</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </section>
 
@@ -904,6 +931,51 @@ h1 em{color:var(--g);font-style:normal}
   <div class="ptitle">Daily Tracker</div>
   <div class="pnote">Track your water, daily habits, and weight progress right here. Data saves in your browser so it's here next time you open this file.</div>
 
+  <!-- Cloud Synchronization Card -->
+  <div class="tracker-card" id="sync-panel" style="margin-bottom:24px;border:1px solid rgba(74, 184, 255, 0.15);background:linear-gradient(135deg, var(--s1) 0%, rgba(17, 24, 17, 0.6) 100%);position:relative;overflow:hidden">
+    <div style="position:absolute;top:-50px;right:-50px;width:150px;height:150px;background:radial-gradient(circle, rgba(74,184,255,0.06) 0%, transparent 70%);pointer-events:none"></div>
+    
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px">
+      <div>
+        <div class="tracker-card-title" style="color:var(--b);display:flex;align-items:center;gap:8px">☁️ Cloud Synchronization</div>
+        <p style="color:var(--muted);font-size:12px;max-width:540px;margin-top:6px;line-height:1.5">
+          Sync your water intake, weight log, daily checklist, and notes across all of your devices (laptop, mobile, iPad) instantly. Powered by secure, serverless private sandboxing.
+        </p>
+      </div>
+      
+      <!-- Sync Status Pill -->
+      <div id="sync-status-badge" style="font-family:var(--mono);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:6px 12px;border-radius:100px;background:var(--s2);border:1px solid var(--border);color:var(--dim);display:flex;align-items:center;gap:6px">
+        <span class="sync-dot" id="sync-status-dot" style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--dim)"></span>
+        <span class="sync-status-txt" id="sync-status-txt">Offline Mode</span>
+      </div>
+    </div>
+    
+    <!-- User Information Panel / Sign-in Actions -->
+    <div id="sync-actions-panel" style="margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.03);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <!-- Signed-out view -->
+      <div id="sync-signed-out" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <span style="font-size:12px;color:var(--dim)">Your progress is saved locally. Connect to back it up securely in the cloud:</span>
+        <button class="w-btn" onclick="signInPuter()" style="background:var(--b);color:#000;font-weight:600;padding:8px 16px;border-radius:4px;cursor:pointer;border:none;box-shadow:0 4px 12px rgba(74,184,255,0.2)">Connect & Sync Account</button>
+      </div>
+      
+      <!-- Signed-in view -->
+      <div id="sync-signed-in" style="display:none;align-items:center;justify-content:space-between;width:100%;flex-wrap:wrap;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--s2);border:1px solid rgba(74,184,255,0.3);color:var(--b);display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:13px;font-family:var(--mono)" id="user-avatar">?</div>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text)" id="user-display-name">Loading user...</div>
+            <div style="font-size:10px;color:var(--muted)" id="last-sync-time">Last synced: Never</div>
+          </div>
+        </div>
+        
+        <div style="display:flex;gap:8px">
+          <button class="w-btn" onclick="manualSync()" style="background:rgba(74,184,255,0.1);color:var(--b);border:1px solid rgba(74,184,255,0.25)">Force Sync</button>
+          <button class="w-btn" onclick="signOutPuter()" style="background:transparent;color:var(--muted);border:1px solid var(--border)">Sign Out</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="tracker-grid">
     <!-- Water Tracker -->
     <div class="tracker-card">
@@ -925,16 +997,16 @@ h1 em{color:var(--g);font-style:normal}
     <div class="tracker-card">
       <div class="tracker-card-title">✅ Daily Checklist</div>
       <div class="checklist-items" id="checklist">
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took B12 + D3 with breakfast</div></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Whey Protein (post-workout)</div></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Creatine post-workout</div></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Zinc with dinner</div></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Magnesium at bedtime</div></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Took Omega-3 with meal</div></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Hit protein target (140g+)</div></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Completed gym session</div></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">15 min morning sunlight</div></div>
-        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box">✓</div><div class="check-text">Amla / lemon with iron-rich meal</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Took B12 + D3 with breakfast</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Took Whey Protein (post-workout)</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Took Creatine post-workout</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Took Zinc with dinner</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Took Magnesium at bedtime</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Took Omega-3 with meal</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Hit protein target (140g+)</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Completed gym session</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">15 min morning sunlight</div></div>
+        <div class="check-item" onclick="toggleCheck(this)"><div class="check-box"></div><div class="check-text">Amla / lemon with iron-rich meal</div></div>
       </div>
     </div>
 
@@ -1054,17 +1126,19 @@ h1 em{color:var(--g);font-style:normal}
     <div class="tip-card span2">
       <div class="tip-icon">🛒</div>
       <div class="tip-title">Budget Swaps</div>
-      <table class="tbl" style="margin-bottom:0">
-        <thead><tr><th>Expensive Item</th><th>Budget Swap</th><th>Saving</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td>Whey protein ₹2,500/kg</td><td>Soya chunks + curd + dal</td><td>~90% cheaper</td><td>Same protein, better micronutrients</td></tr>
-          <tr><td>Packaged paneer ₹80/200g</td><td>Homemade (or eggs)</td><td>~60% cheaper</td><td>Fresher, more protein per rupee</td></tr>
-          <tr><td>Expensive nuts (cashew, pistachio)</td><td>Peanuts + pumpkin seeds</td><td>~75% cheaper</td><td>Peanuts ₹60/kg, excellent fat+protein</td></tr>
-          <tr><td>Protein bars ₹80–120 each</td><td>Roasted chana + peanut butter</td><td>~95% cheaper</td><td>₹3 snack, 15g protein</td></tr>
-          <tr><td>Fish oil capsules</td><td>1 tsp flaxseeds + 2 walnuts daily</td><td>~80% cheaper</td><td>ALA source, ₹80 for months of supply</td></tr>
-          <tr><td>Packaged curd ₹30/100g</td><td>Homemade curd</td><td>~70% cheaper</td><td>More probiotic, set it in 8 hours</td></tr>
-        </tbody>
-      </table>
+      <div class="tbl-container" style="margin-bottom:0">
+        <table class="tbl" style="margin-bottom:0">
+          <thead><tr><th>Expensive Item</th><th>Budget Swap</th><th>Saving</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>Whey protein ₹2,500/kg</td><td>Soya chunks + curd + dal</td><td>~90% cheaper</td><td>Same protein, better micronutrients</td></tr>
+            <tr><td>Packaged paneer ₹80/200g</td><td>Homemade (or eggs)</td><td>~60% cheaper</td><td>Fresher, more protein per rupee</td></tr>
+            <tr><td>Expensive nuts (cashew, pistachio)</td><td>Peanuts + pumpkin seeds</td><td>~75% cheaper</td><td>Peanuts ₹60/kg, excellent fat+protein</td></tr>
+            <tr><td>Protein bars ₹80–120 each</td><td>Roasted chana + peanut butter</td><td>~95% cheaper</td><td>₹3 snack, 15g protein</td></tr>
+            <tr><td>Fish oil capsules</td><td>1 tsp flaxseeds + 2 walnuts daily</td><td>~80% cheaper</td><td>ALA source, ₹80 for months of supply</td></tr>
+            <tr><td>Packaged curd ₹30/100g</td><td>Homemade curd</td><td>~70% cheaper</td><td>More probiotic, set it in 8 hours</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </section>
@@ -1104,7 +1178,7 @@ function buildWater(){
     const d=document.createElement('div');
     d.className='wdot'+(i<waterCount?' filled':'');
     d.textContent=i<waterCount?'💧':'';
-    d.onclick=()=>{waterCount=i+1;localStorage.setItem('water',waterCount);buildWater()};
+    d.onclick=()=>{waterCount=i+1;localStorage.setItem('water',waterCount);buildWater();triggerCloudSync();};
     c.appendChild(d);
   }
   document.getElementById('waterLabel').textContent=`${(waterCount*0.25).toFixed(2)}L / 3.5L (${waterCount} of 14 glasses)`;
@@ -1120,7 +1194,7 @@ function buildWaterCr(){
     d.style.borderColor = i<waterCrCount ? 'var(--y)' : 'var(--border)';
     d.style.background = i<waterCrCount ? 'rgba(245,212,74,0.2)' : 'var(--s2)';
     d.textContent=i<waterCrCount?'⚡':'';
-    d.onclick=()=>{waterCrCount=i+1;localStorage.setItem('waterCr',waterCrCount);buildWaterCr()};
+    d.onclick=()=>{waterCrCount=i+1;localStorage.setItem('waterCr',waterCrCount);buildWaterCr();triggerCloudSync();};
     c.appendChild(d);
   }
   document.getElementById('waterLabelCr').textContent=`${(waterCrCount*0.25).toFixed(2)}L / 1.0L (${waterCrCount} of 4 glasses)`;
@@ -1130,27 +1204,51 @@ function resetWater(){
   waterCount=0; localStorage.setItem('water',0);
   waterCrCount=0; localStorage.setItem('waterCr',0);
   buildWater(); buildWaterCr();
+  triggerCloudSync();
 }
 
 function refillWater(){
   waterCount=14; localStorage.setItem('water',14);
   waterCrCount=4; localStorage.setItem('waterCr',4);
   buildWater(); buildWaterCr();
+  triggerCloudSync();
 }
 
 buildWater();
 buildWaterCr();
 
 // ── CHECKLIST ──
-function toggleCheck(el){
-  const box=el.querySelector('.check-box');
-  const txt=el.querySelector('.check-text');
-  const done=!txt.classList.contains('done');
-  txt.classList.toggle('done',done);
-  box.classList.toggle('done',done);
-  box.textContent=done?'✓':'✓';
-  box.style.color=done?'#000':'transparent';
+let checklistState = JSON.parse(localStorage.getItem('checklist') || '[]');
+function buildChecklist() {
+  const items = document.querySelectorAll('#checklist .check-item');
+  items.forEach((item, idx) => {
+    const box = item.querySelector('.check-box');
+    const txt = item.querySelector('.check-text');
+    const done = checklistState[idx] || false;
+    txt.classList.toggle('done', done);
+    box.classList.toggle('done', done);
+    box.textContent = done ? '✓' : '';
+    box.style.color = done ? 'var(--bg)' : 'transparent';
+  });
 }
+function toggleCheck(el) {
+  const idx = Array.from(el.parentNode.children).indexOf(el);
+  const box = el.querySelector('.check-box');
+  const txt = el.querySelector('.check-text');
+  const done = !txt.classList.contains('done');
+  
+  txt.classList.toggle('done', done);
+  box.classList.toggle('done', done);
+  box.textContent = done ? '✓' : '';
+  box.style.color = done ? 'var(--bg)' : 'transparent';
+  
+  checklistState[idx] = done;
+  localStorage.setItem('checklist', JSON.stringify(checklistState));
+  if (typeof window.triggerCloudSyncFn === 'function') {
+    window.triggerCloudSyncFn();
+  }
+}
+buildChecklist();
 
 // ── WEIGHT LOG ──
 let weights=JSON.parse(localStorage.getItem('weights')||'[]');
@@ -1165,6 +1263,7 @@ function logWeight(){
   document.getElementById('wInput').value='';
   renderWeights();
   updateBMI(v);
+  triggerCloudSync();
 }
 function renderWeights(){
   const c=document.getElementById('weightEntries');
@@ -1186,7 +1285,166 @@ if(weights.length)updateBMI(weights[0].v);
 // ── NOTES ──
 const savedNotes=localStorage.getItem('weekNotes')||'';
 document.getElementById('weekNotes').value=savedNotes;
-function saveNotes(){localStorage.setItem('weekNotes',document.getElementById('weekNotes').value);}
+function saveNotes(){
+  localStorage.setItem('weekNotes',document.getElementById('weekNotes').value);
+  triggerCloudSync();
+}
+
+// ── PUTER.JS CLOUD SYNC ──
+let syncTimeout = null;
+
+function updateSyncBadge(text, color) {
+  const dot = document.getElementById('sync-status-dot');
+  const txt = document.getElementById('sync-status-txt');
+  if (dot) dot.style.background = color;
+  if (txt) txt.textContent = text;
+}
+
+function updatePuterUI(signedIn, user) {
+  const signedOutEl = document.getElementById('sync-signed-out');
+  const signedInEl = document.getElementById('sync-signed-in');
+  const navBtn = document.getElementById('nav-sync-btn');
+  
+  if (signedIn && user) {
+    if (signedOutEl) signedOutEl.style.display = 'none';
+    if (signedInEl) signedInEl.style.display = 'flex';
+    
+    const name = user.username || user.email || 'Fitness Champion';
+    document.getElementById('user-display-name').textContent = name;
+    document.getElementById('user-avatar').textContent = name.charAt(0).toUpperCase();
+    
+    if (navBtn) {
+      navBtn.textContent = '🟢 Online';
+      navBtn.style.color = 'var(--g)';
+      navBtn.style.borderColor = 'rgba(125,255,95,0.25)';
+    }
+    updateSyncBadge('Connected', 'var(--g)');
+  } else {
+    if (signedOutEl) signedOutEl.style.display = 'flex';
+    if (signedInEl) signedInEl.style.display = 'none';
+    
+    if (navBtn) {
+      navBtn.textContent = '☁️ Offline';
+      navBtn.style.color = 'var(--dim)';
+      navBtn.style.borderColor = 'var(--border)';
+    }
+    updateSyncBadge('Offline Mode', 'var(--dim)');
+  }
+}
+
+async function loadCloudData() {
+  if (typeof puter === 'undefined' || !puter.auth.isSignedIn()) return;
+  
+  updateSyncBadge('Downloading...', 'var(--b)');
+  try {
+    const cloudData = await puter.kv.get('my_fitness_plan_data');
+    if (cloudData) {
+      waterCount = cloudData.water ?? 0;
+      waterCrCount = cloudData.waterCr ?? 0;
+      weights = cloudData.weights ?? [];
+      checklistState = cloudData.checklist ?? [];
+      const notes = cloudData.weekNotes ?? '';
+      
+      localStorage.setItem('water', waterCount);
+      localStorage.setItem('waterCr', waterCrCount);
+      localStorage.setItem('weights', JSON.stringify(weights));
+      localStorage.setItem('checklist', JSON.stringify(checklistState));
+      localStorage.setItem('weekNotes', notes);
+      
+      buildWater();
+      buildWaterCr();
+      buildChecklist();
+      renderWeights();
+      if (weights.length) updateBMI(weights[0].v);
+      document.getElementById('weekNotes').value = notes;
+      
+      const nowLabel = new Date().toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+      document.getElementById('last-sync-time').textContent = `Last synced: ${nowLabel}`;
+      updateSyncBadge('Connected', 'var(--g)');
+    } else {
+      updateSyncBadge('Connected (Empty)', 'var(--g)');
+      triggerCloudSync();
+    }
+  } catch (err) {
+    console.error('Puter cloud download failed:', err);
+    updateSyncBadge('Download Error', 'var(--r)');
+  }
+}
+
+function triggerCloudSync() {
+  if (typeof puter === 'undefined' || !puter.auth.isSignedIn()) return;
+  
+  updateSyncBadge('Syncing...', 'var(--b)');
+  if (syncTimeout) clearTimeout(syncTimeout);
+  
+  syncTimeout = setTimeout(async () => {
+    try {
+      const dataToSync = {
+        water: waterCount,
+        waterCr: waterCrCount,
+        weights: weights,
+        checklist: checklistState,
+        weekNotes: document.getElementById('weekNotes').value,
+        lastUpdated: Date.now()
+      };
+      await puter.kv.set('my_fitness_plan_data', dataToSync);
+      const nowLabel = new Date().toLocaleTimeString('en-IN', {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+      const lastSyncEl = document.getElementById('last-sync-time');
+      if (lastSyncEl) lastSyncEl.textContent = `Last synced: ${nowLabel}`;
+      updateSyncBadge('Connected', 'var(--g)');
+    } catch (err) {
+      console.error('Cloud save failed:', err);
+      updateSyncBadge('Sync Error', 'var(--r)');
+    }
+  }, 1200);
+}
+
+async function signInPuter() {
+  if (typeof puter === 'undefined') return;
+  try {
+    await puter.auth.signIn();
+    const user = await puter.auth.getUser();
+    updatePuterUI(true, user);
+    await loadCloudData();
+  } catch (err) {
+    console.error('Sign in failed:', err);
+  }
+}
+
+async function signOutPuter() {
+  if (typeof puter === 'undefined') return;
+  puter.auth.signOut();
+  updatePuterUI(false);
+}
+
+async function manualSync() {
+  if (typeof puter === 'undefined') return;
+  await loadCloudData();
+}
+
+async function initPuter() {
+  if (typeof puter === 'undefined') {
+    setTimeout(initPuter, 200);
+    return;
+  }
+  
+  window.triggerCloudSyncFn = triggerCloudSync;
+  
+  if (puter.auth.isSignedIn()) {
+    try {
+      const user = await puter.auth.getUser();
+      updatePuterUI(true, user);
+      await loadCloudData();
+    } catch (err) {
+      console.error('Puter loading failed:', err);
+      updatePuterUI(false);
+    }
+  } else {
+    updatePuterUI(false);
+  }
+}
+
+initPuter();
 </script>
 </body>
 </html>
